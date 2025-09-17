@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>Расписание</title>
+        <link href="favicon.ico" rel="icon">
+        <link href="style.css" rel="stylesheet">
+        <link href="schedule.css" rel="stylesheet">
+        <script src="schedule.js"></script>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="schedule.html">Расписание</a></li>
+                    <li><a href="homework.html">Домашние задания</a></li>
+                    <li><a href="notes.html">Заметки</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <h1>Расписание</h1>
+            <p>Неделя <span id="week-display"></span></p>
+            <p><a href="https://docs.google.com/spreadsheets/d/1Rw5W6llxqA1I7b0L-FJrUeCkgt5lDMSwB1xjxSWX5mU/edit?gid=0#gid=0" target="_blank">Официальное расписание</a></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Время</th>
+                        <th>Дисциплина</th>
+                        <th>Тип</th>
+                        <th>Аудитория</th>
+                        <th>Период</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="weekday" colspan="5">Понедельник</td>
+                    </tr>
+                    <tr>
+                        <td>12:00-13:30</td>
+                        <td>Физкультура</td>
+                        <td></td>
+                        <td>Уникс</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>18:00</td>
+                        <td>Java</td>
+                        <td>Лекция</td>
+                        <td><a href="https://tbank.ktalk.ru/4574874931">Онлайн</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="weekday" colspan="5">Вторник</td>
+                    </tr>
+                    <tr class="even">
+                        <td>12:10-13:40</td>
+                        <td>Экономика</td>
+                        <td>Лекция</td>
+                        <td>218</td>
+                        <td>Чётные недели</td>
+                    </tr>
+                    <tr>
+                        <td class="weekday" colspan="5">Среда</td>
+                    </tr>
+                    <tr>
+                        <td>10:10-13:40</td>
+                        <td>Английский язык</td>
+                        <td>Практика</td>
+                        <td>1301</td>
+                        <td></td>
+                    </tr>
+                    <tr class="even">
+                        <td>13:50-15:20</td>
+                        <td>Экономика</td>
+                        <td>Практика</td>
+                        <td>1509</td>
+                        <td>Чётные недели</td>
+                    </tr>
+                    <tr class="odd">
+                        <td>13:50-15:20</td>
+                        <td>Правоведение</td>
+                        <td>Практика</td>
+                        <td>1508</td>
+                        <td>Нечётные недели</td>
+                    </tr>
+                    <tr>
+                        <td>15:50-17:20</td>
+                        <td>Базы данных</td>
+                        <td>Практика</td>
+                        <td>1308</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="weekday" colspan="5">Четверг</td>
+                    </tr>
+                    <tr>
+                        <td>12:00-13:30</td>
+                        <td>Физкультура</td>
+                        <td></td>
+                        <td>Уникс</td>
+                        <td></td>
+                    </tr>
+                    <tr class="even">
+                        <td>13:50-15:20</td>
+                        <td>Правоведение</td>
+                        <td>Лекция</td>
+                        <td>108</td>
+                        <td>Чётные недели</td>
+                    </tr>
+                    <tr>
+                        <td class="weekday" colspan="5">Пятница</td>
+                    </tr>
+                    <tr>
+                        <td>10:10-11:40</td>
+                        <td>Теория вероятности</td>
+                        <td>Лекция</td>
+                        <td>218</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>12:10-13:40</td>
+                        <td>Английский язык</td>
+                        <td>Практика</td>
+                        <td>1405</td>
+                        <td></td>
+                    </tr>
+                    <tr class="limited" data-till-week="10">
+                        <td>13:50-15:20</td>
+                        <td>ОРИС</td>
+                        <td>Лекция</td>
+                        <td>109</td>
+                        <td>До 10 недели</td>
+                    </tr>
+                    <tr>
+                        <td>15:50-17:20</td>
+                        <td>Теория вероятности</td>
+                        <td>Практика</td>
+                        <td>1306</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>19:10-20:40</td>
+                        <td>Java</td>
+                        <td>Практика</td>
+                        <td>1509</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="weekday" colspan="5">Суббота</td>
+                    </tr>
+                    <tr>
+                        <td>12:10-13:40</td>
+                        <td>Базы данных</td>
+                        <td>Лекция</td>
+                        <td>109</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>13:50-17:20</td>
+                        <td>ОРИС</td>
+                        <td>Практика</td>
+                        <td>1308</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+    </body>
+</html>
