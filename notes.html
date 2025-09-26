@@ -7,6 +7,7 @@
         <link href="styles/style.css" rel="stylesheet">
         <link href="styles/notes.css" rel="stylesheet">
         <script src="scripts/theme.js"></script>
+        <script src="scripts/notes.js"></script>
     </head>
     <body>
         <header>
@@ -21,30 +22,8 @@
         </header>
         <main>
             <h1>Заметки</h1>
-            <h2>Преподаватели</h2>
-            <ul>
-                <li>Базы данных (лекции): Абрамский М.М.</li>
-                <li>Базы данных (практика): Гизатуллин А.Н.</li>
-                <li>ОРИС (лекции): Ференец А.А.</li>
-                <li>ОРИС (практика): Иванов М.А.</li>
-            </ul>
-            <h2>Документы</h2>
-            <ul>
-                <li>Заявление на оказание материальной поддержки (профсоюз)</li>
-                <li>Копия продленного профсоюзного билета</li>
-                <li>Копия паспорта с пропиской</li>
-                <li>Билеты до населенного пункта, где студент прописан</li>
-                <li>Реквизиты карты</li>
-                <li>Копия домовой книги</li>
-            </ul>
-            <h2>Успеваемость</h2>
-            <div id="progress">
-                <label>ОРИС: <progress max="100" value="0">0%</progress></label> 0<br>
-                <label>Базы данных: <progress max="100" value="0">0%</progress></label> 0<br>
-                <label>Теория вероятности: <progress max="100" value="0">0%</progress></label> 0<br>
-                <label>Экономика: <progress max="100" value="0">0%</progress></label> 0<br>
-                <label>Правоведение: <progress max="100" value="0">0%</progress></label> 0<br>
-            </div>
+            <div id="notes-container"></div>
+            <button onclick="loadMore();" id="load-more-button">Загрузить ещё</button>
         </main>
         <footer>
             <fieldset id="theme-switcher">
