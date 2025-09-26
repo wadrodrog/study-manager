@@ -4,8 +4,9 @@
         <meta charset="UTF-8">
         <title>Главная</title>
         <link href="favicon.ico" rel="icon">
+        <link href="styles/style.css" rel="stylesheet">
         <link href="style.css" rel="stylesheet">
-        <link href="index.css" rel="stylesheet">
+        <script src="scripts/theme.js"></script>
     </head>
     <body>
         <header>
@@ -27,16 +28,31 @@
                 <li><a href="https://docs.google.com/spreadsheets/d/1Rw5W6llxqA1I7b0L-FJrUeCkgt5lDMSwB1xjxSWX5mU/edit?usp=sharing" target="_blank">Расписание</a></li>
                 <li><a href="https://docs.google.com/spreadsheets/d/1965vXeuy1ZXehqAwyYjJK1ApF10uMwL9Lna_h6xUBgI/edit?usp=sharing" target="_blank">Распределение на курсы по выбору</a></li>
             </ul>
+            <div>
+                <p>
+                    До нового года осталось <span id="countdown"></span>
+                    <progress max="100" value="0" id="progress-bar"></progress>
+                    <span id="progress-text"></span>
+                </p>
+                <script src="scripts/countdown.js"></script>
+            </div>
         </main>
         <footer>
-            <div id="buttons">
-                <a href="https://validator.w3.org" target="_blank"><img src="valid.png" width="88" height="31" alt="Valid HTML5 Document"></a>
-                <img src="https://login.corp.google.com/c/balls.gif" alt="balls">
-                <br>
-            </div>
-            <div id="memes">
-                <img src="https://media1.tenor.com/m/xxgy9ivB2rUAAAAC/cats-plushies.gif">
-            </div>
+            <fieldset id="theme-switcher">
+                <legend>Тема</legend>
+                <div class="option">
+                    <input type="radio" id="theme-auto" name="theme" value="auto" onchange="saveTheme('auto')" checked />
+                    <label for="theme-auto">🖥️</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="theme-light" name="theme" value="light" onchange="saveTheme('light')" />
+                    <label for="theme-light">☀️</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="theme-dark" name="theme" value="dark" onchange="saveTheme('dark')" />
+                    <label for="theme-dark">🌙</label>
+                </div>
+            </fieldset>
         </footer>
     </body>
 </html>

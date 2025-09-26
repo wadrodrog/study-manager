@@ -4,7 +4,7 @@ const difference = current - start;
 const daysPassed = Math.floor(difference / (1000 * 60 * 60 * 24));
 const week = Math.floor((daysPassed + start.getDay()) / 7 + 1);
 
-window.onload = function () {
+window.addEventListener("load", function () {
     document.getElementById("week-display").innerText = week;
 
     if (week % 2 == 1) {
@@ -22,4 +22,4 @@ window.onload = function () {
             limited.style = "text-decoration: line-through;";
         }
     }
-};
+});

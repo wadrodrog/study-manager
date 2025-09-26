@@ -4,14 +4,14 @@
     margin: 2px 0 2px 0;
 
     &.incomplete {
-        background-color: #f9aea4;
+        background-color: light-dark(#f9aea4, #b7574b);
     }
 
     &.complete {
-        background-color: #a4f9ae;
+        background-color: light-dark(#a4f9ae, #6cb275);
     }
 
     &.in-progress {
-        background-color: #f8f9a4;
+        background-color: light-dark(#f8f9a4, #a4a56b);
     }
 }
