@@ -45,6 +45,26 @@
                     <button onclick="next();">➡️</button>
                 </div>
             </div>
+            <div class="form">
+                <p>Обратная связь</p>
+                <form action="" method="post">
+                  <div>
+                    <label for="name">Имя: </label>
+                    <input type="text" name="name" id="form-name" autocomplete="name" pattern="[a-zA-Zа-яА-ЯёЁ]{2,}" required />
+                  </div>
+                  <div>
+                    <label for="email">Email: </label>
+                    <input type="email" name="email" id="form-email" autocomplete="email" required />
+                  </div>
+                  <div>
+                      <label for="message" style="display: block;">Сообщение:</label>
+                      <textarea id="form-message" name="message" rows="5" cols="33" minlength="30" required></textarea>
+                  </div>
+                  <div>
+                    <input type="submit" value="Отправить" />
+                  </div>
+                </form>
+            </div>
         </main>
         <footer>
             <fieldset id="theme-switcher">

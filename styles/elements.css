@@ -7,3 +7,14 @@
         background-color: light-dark(#d1d1d1, #383838);
     }
 }
+
+.form {
+    input:valid[required],
+    textarea:valid {
+        border: 3px solid green;
+    }
+    input:invalid[required],
+    textarea:invalid {
+        border: 3px solid red;
+    }
+}
