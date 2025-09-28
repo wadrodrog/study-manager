@@ -53,7 +53,8 @@
                 <form action="" method="post">
                   <div>
                     <label for="name">Имя: </label>
-                    <input type="text" name="name" id="form-name" autocomplete="name" pattern="[a-zA-Zа-яА-ЯёЁ]{2,}" required />
+                    <input type="text" name="name" id="form-name" autocomplete="name" required />
+                    <!--<input type="text" name="name" id="form-name" autocomplete="name" pattern="[a-zA-Zа-яА-ЯёЁ]{2,}" required />-->
                   </div>
                   <div>
                     <label for="email">Email: </label>
@@ -64,9 +65,10 @@
                       <textarea id="form-message" name="message" rows="5" cols="33" minlength="30" required></textarea>
                   </div>
                   <div>
-                    <input type="submit" value="Отправить" />
+                    <input id="form-send" type="submit" value="Отправить" disabled />
                   </div>
                 </form>
+               <script src="scripts/form.js"></script>
             </div>
         </main>
         <footer>
