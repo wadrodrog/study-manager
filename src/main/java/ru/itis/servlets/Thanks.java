@@ -1,4 +1,4 @@
-package ru.itis;
+package ru.itis.servlets;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

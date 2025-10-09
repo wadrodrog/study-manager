@@ -9,12 +9,12 @@
 }
 
 .form {
-    input[type="email"]:valid[required],
+    input:valid[required],
     textarea:valid,
     .valid {
         border: 3px solid green;
     }
-    input[type="email"]:invalid[required],
+    input:invalid[required],
     textarea:invalid,
     .invalid {
         border: 3px solid red;

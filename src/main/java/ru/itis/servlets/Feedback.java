@@ -1,10 +1,8 @@
-package ru.itis;
+package ru.itis.servlets;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -19,7 +17,33 @@ public class Feedback extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        sendForm(out);
+
+        HttpSession session = request.getSession();
+        Integer visitCount = (Integer) session.getAttribute("visitCount");
+        if (visitCount == null) {
+            visitCount = 1;
+        } else {
+            visitCount++;
+        }
+        session.setAttribute("visitCount", visitCount);
+
+        String email = null;
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("email".equals(cookie.getName())) {
+                    email = cookie.getValue();
+                    System.out.println(email);
+                }
+            }
+        }
+
+        if (email != null) {
+            response.addCookie(new Cookie("email", email));
+        }
+
+        sendForm(out, session);
     }
 
     @Override
@@ -54,10 +78,11 @@ public class Feedback extends HttpServlet {
         out.close();
     }
 
-    private void sendForm(PrintWriter out) {
+    private void sendForm(PrintWriter out, HttpSession session) {
         out.println("<!DOCTYPE html>");
         out.println("<html>");
         out.println("<h1>Обратная связь</h1>");
+        out.println("<p>Количество запросов из этой сессии: " + session.getAttribute("visitCount") + "</p>");
         if (!errorMessage.isEmpty()) {
             out.println("<p style=\"color: red;\">" + errorMessage + "</p>");
         }

@@ -3,21 +3,21 @@
     <head>
         <meta charset="UTF-8">
         <title>Главная</title>
-        <link href="favicon.ico" rel="icon">
-        <link href="styles/style.css" rel="stylesheet">
-        <link href="styles/elements.css" rel="stylesheet">
-        <script src="scripts/theme.js"></script>
-        <script src="scripts/carousel.js"></script>
-        <script src="scripts/interactive_menu.js"></script>
+        <link href="/favicon.ico" rel="icon">
+        <link href="/css/style.css" rel="stylesheet">
+        <link href="/css/elements.css" rel="stylesheet">
+        <script src="/js/theme.js"></script>
+        <script src="/js/carousel.js"></script>
+        <script src="/js/interactive_menu.js"></script>
     </head>
     <body>
         <header>
             <nav>
                 <ul>
-                    <li><a href="index.html">Главная</a></li>
-                    <li><a href="schedule.html">Расписание</a></li>
-                    <li><a href="homework.html">Домашние задания</a></li>
-                    <li><a href="notes.html">Заметки</a></li>
+                    <li><a href="/index">Главная</a></li>
+                    <li><a href="/schedule">Расписание</a></li>
+                    <li><a href="/homework">Домашние задания</a></li>
+                    <li><a href="/notes">Заметки</a></li>
                 </ul>
             </nav>
         </header>
@@ -38,10 +38,10 @@
                     <progress max="100" value="0" id="progress-bar"></progress>
                     <span id="progress-text"></span>
                 </p>
-                <script src="scripts/countdown.js"></script>
+                <script src="/js/countdown.js"></script>
             </div>
             <div>
-                <img id="carousel-image" src="img/cats/1.gif" height="300" alt="Кот">
+                <img id="carousel-image" src="/img/cats/1.gif" height="300" alt="Кот">
                 <div class="carousel-controls">
                     <button onclick="prev();">⬅️</button>
                     <span id="carousel-counter">1/4</span>
@@ -53,8 +53,7 @@
                 <form action="" method="post">
                   <div>
                     <label for="name">Имя: </label>
-                    <input type="text" name="name" id="form-name" autocomplete="name" required />
-                    <!--<input type="text" name="name" id="form-name" autocomplete="name" pattern="[a-zA-Zа-яА-ЯёЁ]{2,}" required />-->
+                    <input type="text" name="name" id="form-name" autocomplete="name" pattern="[a-zA-Zа-яА-ЯёЁ]{2,}" required />
                   </div>
                   <div>
                     <label for="email">Email: </label>
@@ -65,10 +64,9 @@
                       <textarea id="form-message" name="message" rows="5" cols="33" minlength="30" required></textarea>
                   </div>
                   <div>
-                    <input id="form-send" type="submit" value="Отправить" disabled />
+                    <input id="form-send" type="submit" value="Отправить" />
                   </div>
                 </form>
-               <script src="scripts/form.js"></script>
             </div>
         </main>
         <footer>
