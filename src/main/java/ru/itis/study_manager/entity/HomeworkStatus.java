@@ -1,4 +1,4 @@
-package ru.itis.study_manager.models;
+package ru.itis.study_manager.entity;
 
 public enum HomeworkStatus {
     NONE("none"), INCOMPLETE("incomplete"), IN_PROGRESS("in-progress"), COMPLETE("complete");

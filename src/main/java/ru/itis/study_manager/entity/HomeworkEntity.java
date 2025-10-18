@@ -1,12 +1,11 @@
-package ru.itis.study_manager.models;
+package ru.itis.study_manager.entity;
 
 import lombok.Data;
 
-import java.sql.Array;
 import java.util.Date;
 
 @Data
-public class Homework {
+public class HomeworkEntity {
     private int id;
     private String disciplineName;
     private HomeworkStatus status;
@@ -14,7 +13,7 @@ public class Homework {
     private Date deadline;
     private String[] attachments;
 
-    public Homework(int id, String disciplineName, HomeworkStatus status, String contents, Date deadline, String[] attachments) {
+    public HomeworkEntity(int id, String disciplineName, HomeworkStatus status, String contents, Date deadline, String[] attachments) {
         this.id = id;
         this.disciplineName = disciplineName;
         this.status = status;

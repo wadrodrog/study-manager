@@ -1,4 +1,4 @@
-package ru.itis.study_manager.servlets;
+package ru.itis.study_manager.servlet;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.itis.study_manager.data.HomeworkData;
 import ru.itis.study_manager.web.HomeworkHtml;
-import ru.itis.study_manager.web.HtmlManager;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -36,18 +35,23 @@ public class HomeworkServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html;charset=UTF-8");
         response.getWriter().println(getHtml().getPage(getData().getAll()));
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         getData().add(
                 request.getParameter("discipline_name"),
                 request.getParameter("contents"),
                 request.getParameter("deadline")
         );
         response.sendRedirect("/homework");
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        getData().delete(Integer.parseInt(request.getParameter("id")));
     }
 }

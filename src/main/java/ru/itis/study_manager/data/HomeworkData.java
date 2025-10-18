@@ -1,7 +1,7 @@
 package ru.itis.study_manager.data;
 
-import ru.itis.study_manager.models.Homework;
-import ru.itis.study_manager.models.HomeworkStatus;
+import ru.itis.study_manager.entity.HomeworkEntity;
+import ru.itis.study_manager.entity.HomeworkStatus;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -38,11 +38,11 @@ public class HomeworkData extends DataManager {
         }
     }
 
-    public List<Homework> getAll() {
-        List<Homework> homeworkList = new ArrayList<>();
+    public List<HomeworkEntity> getAll() {
+        List<HomeworkEntity> homeworkList = new ArrayList<>();
         try (ResultSet resultSet = getStatement().executeQuery("select * from homework;")) {
             while (resultSet.next()) {
-                homeworkList.add(new Homework(
+                homeworkList.add(new HomeworkEntity(
                         resultSet.getInt("id"),
                         resultSet.getString("discipline_name"),
                         HomeworkStatus.of(resultSet.getString("status")),
@@ -53,6 +53,17 @@ public class HomeworkData extends DataManager {
             }
             return homeworkList;
         } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public void delete(int id) {
+        try (PreparedStatement preparedStatement = super.getPreparedStatement("""
+            delete from homework where id = ?;
+            """)) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.execute();
+        } catch (SQLException | ClassNotFoundException e) {
             throw new IllegalStateException(e);
         }
     }

@@ -35,6 +35,7 @@ public class HtmlManager {
         sb.append("<link href=\"/static/css/style.css\" rel=\"stylesheet\">");
         if (!css.isEmpty()) {
             sb.append("\n<link href=\"/static/css/%s.css\" rel=\"stylesheet\">".formatted(css));
+            sb.append("\n<script src=\"/static/js/%s.js\"></script>".formatted(css));
         }
         return sb.toString();
     }

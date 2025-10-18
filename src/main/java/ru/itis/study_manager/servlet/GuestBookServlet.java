@@ -1,4 +1,4 @@
-package ru.itis.study_manager.servlets;
+package ru.itis.study_manager.servlet;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

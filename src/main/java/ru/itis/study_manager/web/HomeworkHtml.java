@@ -1,6 +1,6 @@
 package ru.itis.study_manager.web;
 
-import ru.itis.study_manager.models.Homework;
+import ru.itis.study_manager.entity.HomeworkEntity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +10,7 @@ public class HomeworkHtml extends HtmlManager {
         super("Домашние задания", "homework");
     }
 
-    public String getPage(List<Homework> homeworkList) {
+    public String getPage(List<HomeworkEntity> homeworkList) {
         return super.generate(getAddForm() + '\n' + getHomeworkList(homeworkList));
     }
 
@@ -45,9 +45,9 @@ public class HomeworkHtml extends HtmlManager {
             """;
     }
 
-    private String getHomeworkList(List<Homework> homeworkList) {
+    private String getHomeworkList(List<HomeworkEntity> homeworkList) {
         StringBuilder sb = new StringBuilder();
-        for (Homework homework : homeworkList) {
+        for (HomeworkEntity homework : homeworkList) {
             sb.append("<div class=\"homework-item %s\">\n".formatted(homework.getStatus()));
             sb.append("  <h2>%s</h2>\n".formatted(homework.getDisciplineName()));
             sb.append("  <p>%s</p>\n".formatted(homework.getContents()));
@@ -57,6 +57,7 @@ public class HomeworkHtml extends HtmlManager {
                 sb.append("    <p>%s</p>\n".formatted(Arrays.toString(homework.getAttachments())));
                 sb.append("  </details>\n");
             }
+            sb.append("  <button onclick=\"deleteHomework(%s)\">Удалить</button>".formatted(homework.getId()));
             sb.append("</div>");
         }
         return sb.toString();
