@@ -1,9 +1,18 @@
 package ru.itis.study_manager.entity;
 
 public enum HomeworkStatus {
-    NONE("none"), INCOMPLETE("incomplete"), IN_PROGRESS("in-progress"), COMPLETE("complete");
+    NONE("None", "none"),
+    INCOMPLETE("Incomplete", "incomplete"),
+    IN_PROGRESS("In progress", "in-progress"),
+    COMPLETE("Complete", "complete");
 
-    HomeworkStatus(String css) {}
+    public final String name;
+    public final String css;
+
+    HomeworkStatus(String name, String css) {
+        this.name = name;
+        this.css = css;
+    }
 
     public static HomeworkStatus of(String string) {
         return switch (string) {

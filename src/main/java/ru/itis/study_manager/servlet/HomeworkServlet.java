@@ -1,11 +1,11 @@
 package ru.itis.study_manager.servlet;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.itis.study_manager.data.HomeworkData;
+import ru.itis.study_manager.entity.HomeworkStatus;
 import ru.itis.study_manager.web.HomeworkHtml;
 
 import java.io.IOException;
@@ -42,11 +42,19 @@ public class HomeworkServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        getData().add(
-                request.getParameter("discipline_name"),
-                request.getParameter("contents"),
-                request.getParameter("deadline")
-        );
+        String id = request.getParameter("id");
+        String disciplineName = request.getParameter("discipline_name");
+        String status = "Incomplete"; //request.getParameter("status");
+        String contents = request.getParameter("contents");
+        String deadline = request.getParameter("deadline");
+        if (id == null) {
+            getData().add(disciplineName, contents, deadline);
+        } else {
+            getData().update(
+                    Integer.parseInt(id), disciplineName, HomeworkStatus.of(status),
+                    contents, deadline
+            );
+        }
         response.sendRedirect("/homework");
     }
 

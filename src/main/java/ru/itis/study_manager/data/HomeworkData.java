@@ -67,4 +67,21 @@ public class HomeworkData extends DataManager {
             throw new IllegalStateException(e);
         }
     }
+
+    public void update(int id, String disciplineName, HomeworkStatus status, String contents, String deadline) {
+        try (PreparedStatement preparedStatement = super.getPreparedStatement("""
+            update homework
+            set discipline_name = ?, status = ?, contents = ?, deadline = ?
+            where id = ?;
+            """)) {
+            preparedStatement.setString(1, disciplineName);
+            preparedStatement.setString(2, status.name);
+            preparedStatement.setString(3, contents);
+            preparedStatement.setDate(4, deadline.isEmpty() ? null : Date.valueOf(deadline));
+            preparedStatement.setInt(5, id);
+            preparedStatement.execute();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 }

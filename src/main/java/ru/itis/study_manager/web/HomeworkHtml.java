@@ -45,6 +45,38 @@ public class HomeworkHtml extends HtmlManager {
             """;
     }
 
+    public String getUpdateForm(int id) {
+        return """
+            <details>
+                <summary>Обновить</summary>
+                <form method="post" action="/homework">
+                    <input type="hidden" name="id" value="%d" />
+                    <div>
+                        <label>
+                            Дисциплина:
+                            <input type="text" name="discipline_name" />
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            Дедлайн:
+                            <input type="date" name="deadline" />
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            Содержимое:
+                            <textarea name="contents" rows="5" cols="33"></textarea>
+                        </label>
+                    </div>
+                    <div>
+                        <input type="submit" value="Обновить">
+                    </div>
+                </form>
+            </details>
+            """.formatted(id);
+    }
+
     private String getHomeworkList(List<HomeworkEntity> homeworkList) {
         StringBuilder sb = new StringBuilder();
         for (HomeworkEntity homework : homeworkList) {
@@ -58,6 +90,7 @@ public class HomeworkHtml extends HtmlManager {
                 sb.append("  </details>\n");
             }
             sb.append("  <button onclick=\"deleteHomework(%s)\">Удалить</button>".formatted(homework.getId()));
+            sb.append(getUpdateForm(homework.getId()));
             sb.append("</div>");
         }
         return sb.toString();
