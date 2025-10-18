@@ -5,7 +5,7 @@ import jakarta.servlet.http.*;
 import ru.itis.application.store.Cart;
 import ru.itis.application.store.Product;
 import ru.itis.application.store.Store;
-import ru.itis.web.HtmlManager;
+import ru.itis.study_manager.web.HtmlManager;
 
 import java.io.IOException;
 import java.io.PrintWriter;

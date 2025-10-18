@@ -1,49 +1,76 @@
-package ru.itis.servlets;
+package ru.itis.study_manager.servlets;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+import ru.itis.study_manager.web.HtmlManager;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-@WebServlet("/feedback")
-public class Feedback extends HttpServlet {
+@WebServlet("/guest-book")
+public class GuestBookServlet extends HttpServlet {
     private String errorMessage = "";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String content = """
+                <form method="post" action="/guest-book">
+                  <div>
+                    <label>
+                      Имя:
+                      <input type="text" name="name" autocomplete="name" pattern="[a-zA-Zа-яА-ЯёЁ]{2,255}" required />
+                    </label>
+                  </div>
+                  <div>
+                    <label>
+                      Email:
+                      <input type="email" name="email" autocomplete="email" required />
+                    </label>
+                  </div>
+                  <div>
+                    <label>
+                      Сообщение:
+                      <textarea name="message" rows="5" cols="33" required></textarea>
+                    </label>
+                  </div>
+                  <div>
+                    <input type="submit" value="Отправить">
+                  </div>
+                </form>
+                """;
+
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+        HtmlManager htmlManager = new HtmlManager("Гостевая книга");
+        out.println(htmlManager.generate(content));
 
-        HttpSession session = request.getSession();
-        Integer visitCount = (Integer) session.getAttribute("visitCount");
-        if (visitCount == null) {
-            visitCount = 1;
-        } else {
-            visitCount++;
-        }
-        session.setAttribute("visitCount", visitCount);
-
-        String email = null;
-
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("email".equals(cookie.getName())) {
-                    email = cookie.getValue();
-                    System.out.println(email);
-                }
-            }
-        }
-
-        if (email != null) {
-            response.addCookie(new Cookie("email", email));
-        }
-
-        sendForm(out, session);
+//        HttpSession session = request.getSession();
+//        Integer visitCount = (Integer) session.getAttribute("visitCount");
+//        if (visitCount == null) {
+//            visitCount = 1;
+//        } else {
+//            visitCount++;
+//        }
+//        session.setAttribute("visitCount", visitCount);
+//
+//        String email = null;
+//
+//        Cookie[] cookies = request.getCookies();
+//        if (cookies != null) {
+//            for (Cookie cookie : cookies) {
+//                if ("email".equals(cookie.getName())) {
+//                    email = cookie.getValue();
+//                    System.out.println(email);
+//                }
+//            }
+//        }
+//
+//        if (email != null) {
+//            response.addCookie(new Cookie("email", email));
+//        }
     }
 
     @Override
@@ -79,31 +106,11 @@ public class Feedback extends HttpServlet {
     }
 
     private void sendForm(PrintWriter out, HttpSession session) {
-        out.println("<!DOCTYPE html>");
-        out.println("<html>");
-        out.println("<h1>Обратная связь</h1>");
         out.println("<p>Количество запросов из этой сессии: " + session.getAttribute("visitCount") + "</p>");
         if (!errorMessage.isEmpty()) {
             out.println("<p style=\"color: red;\">" + errorMessage + "</p>");
         }
-        out.println("<form method=\"post\" action=\"/feedback\">");
-        out.println("<div>");
-        out.println("<label for=\"name\">Имя: </label>");
-        out.println("<input type=\"text\" name=\"name\" id=\"form-name\" autocomplete=\"name\" required />");
-        out.println("</div>");
-        out.println("<div>");
-        out.println("<label for=\"email\">Email: </label>");
-        out.println("<input type=\"email\" name=\"email\" id=\"form-email\" autocomplete=\"email\" required />");
-        out.println("</div>");
-        out.println("<div>");
-        out.println("<label for=\"message\" style=\"display: block;\">Сообщение: </label>");
-        out.println("<textarea id=\"form-message\" name=\"message\" rows=\"5\" cols=\"33\" required></textarea>");
-        out.println("</div>");
-        out.println("<div>");
-        out.println("<input id=\"form-send\" type=\"submit\" value=\"Отправить\">");
-        out.println("</div>");
-        out.println("</form>");
-        out.println("</html>");
+
     }
 
     private boolean validateName(String name) {
