@@ -18,7 +18,7 @@ public class StoreServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (htmlManager == null) {
-            htmlManager = new HtmlManager("Магазин");
+            htmlManager = new HtmlManager("Магазин", "");
         }
         if (store == null) {
             store = new Store("store/products.csv");

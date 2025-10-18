@@ -38,7 +38,7 @@ public class HomeworkServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/html;charset=UTF-8");
-        response.getWriter().println(getHtml().getHomeworkAddForm());
+        response.getWriter().println(getHtml().getPage(getData().getAll()));
     }
 
     @Override

@@ -2,9 +2,11 @@ package ru.itis.study_manager.web;
 
 public class HtmlManager {
     private final String title;
+    private final String css;
 
-    public HtmlManager(String title) {
+    public HtmlManager(String title, String css) {
         this.title = title;
+        this.css = css;
     }
 
     public String generate(String content) {
@@ -23,9 +25,18 @@ public class HtmlManager {
                  <meta charset="UTF-8">
                  <title>%s</title>
                  <link href="/favicon.ico" rel="icon">
-                 <link href="/static/css/style.css" rel="stylesheet">
+                 %s
                </head>
-               """.formatted(title);
+               """.formatted(title, getCss());
+    }
+
+    private String getCss() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<link href=\"/static/css/style.css\" rel=\"stylesheet\">");
+        if (!css.isEmpty()) {
+            sb.append("\n<link href=\"/static/css/%s.css\" rel=\"stylesheet\">".formatted(css));
+        }
+        return sb.toString();
     }
 
     private String getBody(String content) {

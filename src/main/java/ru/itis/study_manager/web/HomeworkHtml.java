@@ -1,12 +1,21 @@
 package ru.itis.study_manager.web;
 
+import ru.itis.study_manager.models.Homework;
+
+import java.util.Arrays;
+import java.util.List;
+
 public class HomeworkHtml extends HtmlManager {
     public HomeworkHtml() {
-        super("Домашние задания");
+        super("Домашние задания", "homework");
     }
 
-    public String getHomeworkAddForm() {
-        return super.generate("""
+    public String getPage(List<Homework> homeworkList) {
+        return super.generate(getAddForm() + '\n' + getHomeworkList(homeworkList));
+    }
+
+    public String getAddForm() {
+        return """
             <details open>
                 <summary>Добавить</summary>
                 <form method="post" action="/homework">
@@ -33,6 +42,23 @@ public class HomeworkHtml extends HtmlManager {
                     </div>
                 </form>
             </details>
-            """);
+            """;
+    }
+
+    private String getHomeworkList(List<Homework> homeworkList) {
+        StringBuilder sb = new StringBuilder();
+        for (Homework homework : homeworkList) {
+            sb.append("<div class=\"homework-item %s\">\n".formatted(homework.getStatus()));
+            sb.append("  <h2>%s</h2>\n".formatted(homework.getDisciplineName()));
+            sb.append("  <p>%s</p>\n".formatted(homework.getContents()));
+            if (homework.getAttachments().length > 0) {
+                sb.append("  <details>\n");
+                sb.append("    <summary>Вложения</summary>\n");
+                sb.append("    <p>%s</p>\n".formatted(Arrays.toString(homework.getAttachments())));
+                sb.append("  </details>\n");
+            }
+            sb.append("</div>");
+        }
+        return sb.toString();
     }
 }

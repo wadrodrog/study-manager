@@ -18,7 +18,7 @@ public class OrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (htmlManager == null) {
-            htmlManager = new HtmlManager("Спасибо за заказ!");
+            htmlManager = new HtmlManager("Спасибо за заказ!", "");
         }
 
         String sb = "<p><a href=\"/store\">Вернуться в магазин</a></p>\n";

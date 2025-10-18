@@ -1,8 +1,14 @@
 package ru.itis.study_manager.data;
 
+import ru.itis.study_manager.models.Homework;
+import ru.itis.study_manager.models.HomeworkStatus;
+
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeworkData extends DataManager {
     public HomeworkData() throws SQLException {
@@ -28,6 +34,25 @@ public class HomeworkData extends DataManager {
             preparedStatement.setDate(3, deadline.isEmpty() ? null : Date.valueOf(deadline));
             preparedStatement.execute();
         } catch (SQLException | ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public List<Homework> getAll() {
+        List<Homework> homeworkList = new ArrayList<>();
+        try (ResultSet resultSet = getStatement().executeQuery("select * from homework;")) {
+            while (resultSet.next()) {
+                homeworkList.add(new Homework(
+                        resultSet.getInt("id"),
+                        resultSet.getString("discipline_name"),
+                        HomeworkStatus.of(resultSet.getString("status")),
+                        resultSet.getString("contents"),
+                        resultSet.getDate("deadline"),
+                        (String[]) resultSet.getArray("attachments").getArray()
+                ));
+            }
+            return homeworkList;
+        } catch (SQLException e) {
             throw new IllegalStateException(e);
         }
     }
