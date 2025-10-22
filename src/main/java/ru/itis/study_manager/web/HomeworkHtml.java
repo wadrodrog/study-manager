@@ -14,7 +14,7 @@ public class HomeworkHtml extends HtmlManager {
         return super.generate(getAddForm() + '\n' + getHomeworkList(homeworkList));
     }
 
-    public String getAddForm() {
+    private String getAddForm() {
         return """
             <details open>
                 <summary>Добавить</summary>
@@ -45,7 +45,7 @@ public class HomeworkHtml extends HtmlManager {
             """;
     }
 
-    public String getUpdateForm(int id) {
+    private String getUpdateForm(int id) {
         return """
             <details>
                 <summary>Обновить</summary>

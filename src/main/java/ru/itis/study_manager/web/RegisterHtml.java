@@ -1,17 +1,17 @@
 package ru.itis.study_manager.web;
 
-public class LoginHtml extends HtmlManager {
-    public LoginHtml() {
-        super("Вход в аккаунт", "");
+public class RegisterHtml extends HtmlManager {
+    public RegisterHtml() {
+        super("Регистрация", "");
     }
 
     public String getPage() {
-        return super.generate(getLoginForm());
+        return super.generate(getRegisterForm());
     }
 
-    private String getLoginForm() {
+    private String getRegisterForm() {
         return """
-            <form method="post" action="/login">
+            <form method="post" action="/register">
                 <div>
                     <label>
                         Имя пользователя:
@@ -25,7 +25,13 @@ public class LoginHtml extends HtmlManager {
                     </label>
                 </div>
                 <div>
-                    <input type="submit" value="Войти">
+                    <label>
+                        Повторите пароль:
+                        <input type="password" name="repeat_password" required />
+                    </label>
+                </div>
+                <div>
+                    <input type="submit" value="Зарегистрироваться">
                 </div>
             </form>
             """;
