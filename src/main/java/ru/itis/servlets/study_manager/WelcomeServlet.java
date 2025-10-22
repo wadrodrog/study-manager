@@ -7,9 +7,9 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 
-@WebServlet("/index")
-public class IndexServlet extends HttpServlet {
-    private static final String TEMPLATE_PATH = "/html/index.html";
+@WebServlet("/welcome")
+public class WelcomeServlet extends HttpServlet {
+    private static final String TEMPLATE_PATH = "/html/welcome.html";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
