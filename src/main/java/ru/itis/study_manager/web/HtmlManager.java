@@ -54,10 +54,11 @@ public class HtmlManager {
                <header>
                  <nav>
                    <ul>
-                     <li><a href="/index">Главная</a></li>
-                     <li><a href="/schedule">Расписание</a></li>
+                     <li><a href="/welcome">Главная</a></li>
                      <li><a href="/homework">Домашние задания</a></li>
-                     <li><a href="/notes">Заметки</a></li>
+                     <li><a href="/login">Войти</a></li>
+                     <li><a href="/register">Зарегистрироваться</a></li>
+                     <li><a href="/logout">Выйти</a></li>
                    </ul>
                  </nav>
                </header>
