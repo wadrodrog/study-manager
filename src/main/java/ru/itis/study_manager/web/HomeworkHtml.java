@@ -45,12 +45,12 @@ public class HomeworkHtml extends HtmlManager {
             """;
     }
 
-    private String getUpdateForm(int id) {
+    private String getUpdateForm(long id) {
         return """
             <details>
                 <summary>Обновить</summary>
                 <form method="post" action="/homework">
-                    <input type="hidden" name="id" value="%d" />
+                    <input type="hidden" name="homework_id" value="%d" />
                     <div>
                         <label>
                             Дисциплина:
@@ -89,8 +89,8 @@ public class HomeworkHtml extends HtmlManager {
                 sb.append("    <p>%s</p>\n".formatted(Arrays.toString(homework.getAttachments())));
                 sb.append("  </details>\n");
             }
-            sb.append("  <button onclick=\"deleteHomework(%s)\">Удалить</button>".formatted(homework.getId()));
-            sb.append(getUpdateForm(homework.getId()));
+            sb.append("  <button onclick=\"deleteHomework(%s)\">Удалить</button>".formatted(homework.getHomeworkId()));
+            sb.append(getUpdateForm(homework.getHomeworkId()));
             sb.append("</div>");
         }
         return sb.toString();

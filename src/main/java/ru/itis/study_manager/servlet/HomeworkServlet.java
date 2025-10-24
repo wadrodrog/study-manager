@@ -4,62 +4,105 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.itis.study_manager.data.HomeworkData;
-import ru.itis.study_manager.entity.HomeworkStatus;
+import jakarta.servlet.http.HttpSession;
+import ru.itis.study_manager.dto.UserDto;
+import ru.itis.study_manager.entity.HomeworkEntity;
+import ru.itis.study_manager.service.HomeworkService;
 import ru.itis.study_manager.web.HomeworkHtml;
 
 import java.io.IOException;
-import java.sql.SQLException;
+import java.sql.Date;
+import java.util.List;
 
 @WebServlet("/homework")
 public class HomeworkServlet extends HttpServlet {
-    private HomeworkData data = null;
-    private HomeworkHtml html = null;
+    private HomeworkService service;
+    private HomeworkHtml html;
 
-    private HomeworkData getData() {
-        if (data == null) {
-            try {
-                data = new HomeworkData();
-            } catch (SQLException e) {
-                throw new IllegalStateException(e);
-            }
-        }
-        return data;
+    @Override
+    public void init() {
+        this.service = (HomeworkService) getServletContext().getAttribute("homeworkService");
+        this.html = new HomeworkHtml();
     }
 
-    private HomeworkHtml getHtml() {
-        if (html == null) {
-            html = new HomeworkHtml();
+    private UserDto getUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return null;
         }
-        return html;
+        return (UserDto) session.getAttribute("user");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        UserDto user = getUser(request);
+        List<HomeworkEntity> homeworkList = service.getAll(user);
+        String page = html.getPage(homeworkList);
+
         response.setContentType("text/html;charset=UTF-8");
-        response.getWriter().println(getHtml().getPage(getData().getAll()));
+        response.getWriter().println(page);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String id = request.getParameter("id");
+        UserDto user = getUser(request);
+        if (user == null) {
+            response.sendError(403);
+            return;
+        }
+
+        Long homeworkId;
+        try {
+            homeworkId = Long.parseLong(request.getParameter("homework_id"));
+        } catch (NumberFormatException e) {
+            homeworkId = null;
+        }
+
         String disciplineName = request.getParameter("discipline_name");
+        if (disciplineName.length() > 255) {
+            response.sendError(413, "Discipline name must be less than 256 characters.");
+            return;
+        }
+
         String status = "Incomplete"; //request.getParameter("status");
         String contents = request.getParameter("contents");
-        String deadline = request.getParameter("deadline");
-        if (id == null) {
-            getData().add(disciplineName, contents, deadline);
-        } else {
-            getData().update(
-                    Integer.parseInt(id), disciplineName, HomeworkStatus.of(status),
-                    contents, deadline
-            );
+
+        Date deadline = null;
+        try {
+            String deadlineParameter = request.getParameter("deadline");
+            if (deadlineParameter != null && !deadlineParameter.isEmpty()) {
+                deadline = Date.valueOf(deadlineParameter);
+            }
+        } catch (IllegalArgumentException e) {
+            response.sendError(400, "Invalid date format for deadline.");
+            return;
         }
+
+        if (homeworkId == null) {
+            service.add(user, disciplineName, contents, deadline);
+        } else {
+            service.update(user, homeworkId, disciplineName, status, contents, deadline);
+        }
+
         response.sendRedirect("/homework");
     }
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        getData().delete(Integer.parseInt(request.getParameter("id")));
+        UserDto user = getUser(request);
+        if (user == null) {
+            response.sendError(403);
+            return;
+        }
+
+        long homeworkId;
+        try {
+            homeworkId = Long.parseLong(request.getParameter("homework_id"));
+        } catch (NumberFormatException e) {
+            response.sendError(400, "Invalid Homework ID");
+            return;
+        }
+
+        service.delete(user, homeworkId);
     }
 }

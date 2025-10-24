@@ -11,10 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeworkData extends DataManager {
-    public HomeworkData() throws SQLException {
-        super.getStatement().executeUpdate("""
+    public HomeworkData() {
+        try {
+            super.getStatement().executeUpdate("""
             create table if not exists homework (
-                id bigserial primary key,
+                homework_id bigserial primary key,
+                user_id bigserial not null,
                 discipline_name varchar(255) not null,
                 status varchar not null,
                 contents varchar,
@@ -22,28 +24,37 @@ public class HomeworkData extends DataManager {
                 attachments varchar[] default '{}'
             );
             """);
+        } catch (SQLException e) {
+            System.err.println("Error while initializing UserData: " + e.getMessage());
+        }
     }
 
-    public void add(String disciplineName, String contents, String deadline) {
+    public void add(Long userId, String disciplineName, String contents, Date deadline) {
         try (PreparedStatement preparedStatement = super.getPreparedStatement("""
-            insert into homework (discipline_name, status, contents, deadline)
-            values (?, 'Incomplete', ?, ?);
+            insert into homework (user_id, discipline_name, status, contents, deadline)
+            values (?, ?, 'Incomplete', ?, ?);
             """)) {
-            preparedStatement.setString(1, disciplineName);
-            preparedStatement.setString(2, contents);
-            preparedStatement.setDate(3, deadline.isEmpty() ? null : Date.valueOf(deadline));
+            preparedStatement.setLong(1, userId);
+            preparedStatement.setString(2, disciplineName);
+            preparedStatement.setString(3, contents);
+            preparedStatement.setDate(4, deadline);
             preparedStatement.execute();
         } catch (SQLException | ClassNotFoundException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    public List<HomeworkEntity> getAll() {
+    public List<HomeworkEntity> getAll(long userId) {
         List<HomeworkEntity> homeworkList = new ArrayList<>();
-        try (ResultSet resultSet = getStatement().executeQuery("select * from homework;")) {
+        try (PreparedStatement preparedStatement = super.getPreparedStatement("""
+            select * from homework where user_id = ?;
+            """)) {
+            preparedStatement.setLong(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 homeworkList.add(new HomeworkEntity(
-                        resultSet.getInt("id"),
+                        resultSet.getLong("homework_id"),
+                        resultSet.getLong("user_id"),
                         resultSet.getString("discipline_name"),
                         HomeworkStatus.of(resultSet.getString("status")),
                         resultSet.getString("contents"),
@@ -52,33 +63,39 @@ public class HomeworkData extends DataManager {
                 ));
             }
             return homeworkList;
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    public void delete(int id) {
+    public void delete(long homeworkId, long userId) {
         try (PreparedStatement preparedStatement = super.getPreparedStatement("""
-            delete from homework where id = ?;
+            delete from homework
+            where homework_id = ? and user_id = ?;
             """)) {
-            preparedStatement.setInt(1, id);
+            preparedStatement.setLong(1, homeworkId);
+            preparedStatement.setLong(2, userId);
             preparedStatement.execute();
         } catch (SQLException | ClassNotFoundException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    public void update(int id, String disciplineName, HomeworkStatus status, String contents, String deadline) {
+    public void update(
+            long homeworkId, long userId,
+            String disciplineName, HomeworkStatus status, String contents, Date deadline
+    ) {
         try (PreparedStatement preparedStatement = super.getPreparedStatement("""
             update homework
             set discipline_name = ?, status = ?, contents = ?, deadline = ?
-            where id = ?;
+            where homework_id = ? and user_id = ?;
             """)) {
             preparedStatement.setString(1, disciplineName);
             preparedStatement.setString(2, status.name);
             preparedStatement.setString(3, contents);
-            preparedStatement.setDate(4, deadline.isEmpty() ? null : Date.valueOf(deadline));
-            preparedStatement.setInt(5, id);
+            preparedStatement.setDate(4, deadline);
+            preparedStatement.setLong(5, homeworkId);
+            preparedStatement.setLong(6, userId);
             preparedStatement.execute();
         } catch (SQLException | ClassNotFoundException e) {
             throw new IllegalStateException(e);
