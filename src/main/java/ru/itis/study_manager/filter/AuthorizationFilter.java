@@ -20,6 +20,8 @@ public class AuthorizationFilter extends HttpFilter {
             ServletResponse response,
             FilterChain chain
     ) throws IOException, ServletException {
+        request.setCharacterEncoding("UTF-8");
+
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         String uri = httpRequest.getRequestURI();

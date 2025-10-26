@@ -8,19 +8,6 @@
     }
 }
 
-.form {
-    input:valid[required],
-    textarea:valid,
-    .valid {
-        border: 3px solid green;
-    }
-    input:invalid[required],
-    textarea:invalid,
-    .invalid {
-        border: 3px solid red;
-    }
-}
-
 #important-links-container {
     border: 2px solid red;
 

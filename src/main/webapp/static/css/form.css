@@ -1,0 +1,15 @@
+form {
+    input:valid[required],
+    textarea:valid {
+        border: 3px solid green;
+    }
+
+    input:invalid[required],
+    textarea:invalid {
+        border: 3px solid red;
+    }
+}
+
+p.error {
+    color: red;
+}

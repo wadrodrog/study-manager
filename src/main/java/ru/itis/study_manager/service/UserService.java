@@ -1,28 +1,76 @@
 package ru.itis.study_manager.service;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.itis.study_manager.data.UserData;
 import ru.itis.study_manager.dto.UserDto;
+import ru.itis.study_manager.util.RegexUtil;
 
 @RequiredArgsConstructor
 public class UserService {
     private final UserData userData;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private final RegexUtil usernameValidator = new RegexUtil("^[a-zA-Z0-9_]{1,255}$");
+    private final RegexUtil passwordValidator = new RegexUtil("^.{8,255}$");
+
+    public UserDto getCurrentUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return null;
+        }
+        return (UserDto) session.getAttribute("user");
+    }
+
+    public void setCurrentUser(HttpServletRequest request, UserDto user) {
+        HttpSession session = request.getSession();
+        session.setAttribute("user", user);
+    }
+
+    public boolean isAuthorized(HttpServletRequest request) {
+        return getCurrentUser(request) != null;
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public boolean validateUsername(String username) {
+        if (username == null) {
+            return false;
+        }
+        return usernameValidator.validate(username.trim());
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public boolean validatePassword(String password) {
+        if (password == null) {
+            return false;
+        }
+        return passwordValidator.validate(password);
+    }
 
     public UserDto registerUser(String username, String password) {
+        if (!validateUsername(username) || !validatePassword(password)) {
+            return null;
+        }
+
         Long userId = userData.createUser(username, encoder.encode(password));
         if (userId == null) {
             return null;
         }
+
         return userData.getUserDto(userId);
     }
 
     public UserDto authenticateUser(String username, String rawPassword) {
+        if (!validateUsername(username) || !validatePassword(rawPassword)) {
+            return null;
+        }
+
         String passwordHash = userData.getPasswordHash(username);
         if (encoder.matches(rawPassword, passwordHash)) {
             return userData.getUserDto(username);
         }
+
         return null;
     }
 }

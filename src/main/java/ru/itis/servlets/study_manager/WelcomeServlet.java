@@ -13,6 +13,8 @@ public class WelcomeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        //response.setContentType("text/html;charset=UTF-8");
+        //request.getRequestDispatcher("/jsp/base.jsp").forward(request, response);
         RequestDispatcher dispatcher = request.getRequestDispatcher(TEMPLATE_PATH);
         dispatcher.forward(request, response);
     }
