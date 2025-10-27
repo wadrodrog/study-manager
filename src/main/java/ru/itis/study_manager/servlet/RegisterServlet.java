@@ -1,31 +1,35 @@
 package ru.itis.study_manager.servlet;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import ru.itis.study_manager.dto.UserDto;
 import ru.itis.study_manager.service.UserService;
-import ru.itis.study_manager.web.RegisterHtml;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+
+import static ru.itis.study_manager.config.ApplicationListener.JSP_BASE;
 
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
     private UserService service;
-    private RegisterHtml html;
 
     @Override
     public void init() {
         service = (UserService) getServletContext().getAttribute("userService");
-        html = new RegisterHtml();
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("text/html;charset=UTF-8");
-        resp.getWriter().println(html.getPage());
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("title", "Регистрация");
+        req.setAttribute("css", List.of("form"));
+        req.setAttribute("content", "register");
+        req.setAttribute("authorized", service.isAuthorized(req));
+        req.getRequestDispatcher(JSP_BASE).forward(req, resp);
     }
 
     @Override
@@ -34,25 +38,18 @@ public class RegisterServlet extends HttpServlet {
         String password = req.getParameter("password");
         String repeatPassword = req.getParameter("repeat_password");
 
-        if (username == null || username.trim().isBlank()
-                || password == null || password.isEmpty()) {
-            resp.sendRedirect("/register?error=Username and password are required");
-            return;
-        }
-
-        if (!password.equals(repeatPassword)) {
-            resp.sendRedirect("/register?error=Passwords don't match");
+        if (!Objects.equals(password, repeatPassword)) {
+            resp.sendRedirect("/register?error=Passwords do not match");
             return;
         }
 
         UserDto user = service.registerUser(username, password);
-
         if (user == null) {
             resp.sendRedirect("/register?error=Username already exists");
-        } else {
-            HttpSession session = req.getSession();
-            session.setAttribute("user", user);
-            resp.sendRedirect("/welcome");
+            return;
         }
+
+        service.setCurrentUser(req, user);
+        resp.sendRedirect("/welcome");
     }
 }

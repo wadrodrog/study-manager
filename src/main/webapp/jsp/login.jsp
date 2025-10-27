@@ -9,7 +9,7 @@
             <div>
                 <label>
                     Пароль:
-                    <input type="password" name="password" minlength="8" maxlength="255" pattern="^.{8,255}$" required />
+                    <input type="password" name="password" minlength="8" maxlength="255" required />
                 </label>
             </div>
             <div>
