@@ -36,13 +36,16 @@ public class LoginServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
-        UserDto user = service.authenticateUser(username, password);
-        if (user == null) {
-            resp.sendRedirect("/login?error=Wrong username or password");
-            return;
+        try {
+            UserDto user = service.authenticateUser(username, password);
+            if (user == null) {
+                resp.sendRedirect("/login?error=Wrong username or password");
+                return;
+            }
+            service.setCurrentUser(req, user);
+            resp.sendRedirect("/welcome");
+        } catch (IllegalArgumentException e) {
+            resp.sendRedirect("/login?error=" + e.getMessage());
         }
-
-        service.setCurrentUser(req, user);
-        resp.sendRedirect("/welcome");
     }
 }

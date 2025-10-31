@@ -43,13 +43,16 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        UserDto user = service.registerUser(username, password);
-        if (user == null) {
-            resp.sendRedirect("/register?error=Username already exists");
-            return;
+        try {
+            UserDto user = service.registerUser(username, password);
+            if (user == null) {
+                resp.sendRedirect("/register?error=Username already exists");
+                return;
+            }
+            service.setCurrentUser(req, user);
+            resp.sendRedirect("/welcome");
+        } catch (IllegalArgumentException e) {
+            resp.sendRedirect("/register?error=" + e.getMessage());
         }
-
-        service.setCurrentUser(req, user);
-        resp.sendRedirect("/welcome");
     }
 }

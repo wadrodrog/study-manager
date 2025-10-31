@@ -48,9 +48,9 @@ public class UserService {
         return passwordValidator.validate(password);
     }
 
-    public UserDto registerUser(String username, String password) {
+    public UserDto registerUser(String username, String password) throws IllegalArgumentException {
         if (!validateUsername(username) || !validatePassword(password)) {
-            return null;
+            throw new IllegalArgumentException("Invalid input");
         }
 
         Long userId = userData.createUser(username, encoder.encode(password));
@@ -61,9 +61,9 @@ public class UserService {
         return userData.getUserDto(userId);
     }
 
-    public UserDto authenticateUser(String username, String rawPassword) {
+    public UserDto authenticateUser(String username, String rawPassword) throws IllegalArgumentException {
         if (!validateUsername(username) || !validatePassword(rawPassword)) {
-            return null;
+            throw new IllegalArgumentException("Invalid input");
         }
 
         String passwordHash = userData.getPasswordHash(username);
