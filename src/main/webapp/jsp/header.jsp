@@ -6,7 +6,7 @@
                 <li><a href="/welcome">Главная</a></li>
                 <c:choose>
                 <c:when test="${authorized}">
-                <li><a href="/homework">Домашние задания</a></li>
+                <li><a href="/tasks">Задачи</a></li>
                 <li><a href="/logout">Выйти</a></li>
                 </c:when>
                 <c:otherwise>

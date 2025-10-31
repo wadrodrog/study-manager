@@ -7,4 +7,7 @@
         <c:forEach var="cssItem" items="${css}">
         <link href="/static/css/${cssItem}.css" rel="stylesheet">
         </c:forEach>
+        <c:forEach var="jsItem" items="${js}">
+        <script src="/static/js/${jsItem}.js"></script>
+        </c:forEach>
     </head>

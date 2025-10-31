@@ -8,6 +8,10 @@ form {
     textarea:invalid {
         border: 3px solid red;
     }
+
+    label textarea {
+        display: block;
+    }
 }
 
 p.error {

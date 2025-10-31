@@ -1,7 +1,5 @@
 package ru.itis.study_manager.service;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.itis.study_manager.data.UserData;
@@ -9,28 +7,11 @@ import ru.itis.study_manager.dto.UserDto;
 import ru.itis.study_manager.util.RegexUtil;
 
 @RequiredArgsConstructor
-public class UserService {
+public class UserService extends Service {
     private final UserData userData;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private final RegexUtil usernameValidator = new RegexUtil("^[a-zA-Z0-9_]{1,255}$");
     private final RegexUtil passwordValidator = new RegexUtil("^.{8,255}$");
-
-    public UserDto getCurrentUser(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return null;
-        }
-        return (UserDto) session.getAttribute("user");
-    }
-
-    public void setCurrentUser(HttpServletRequest request, UserDto user) {
-        HttpSession session = request.getSession();
-        session.setAttribute("user", user);
-    }
-
-    public boolean isAuthorized(HttpServletRequest request) {
-        return getCurrentUser(request) != null;
-    }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean validateUsername(String username) {

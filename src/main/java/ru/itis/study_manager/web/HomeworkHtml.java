@@ -11,38 +11,7 @@ public class HomeworkHtml extends HtmlManager {
     }
 
     public String getPage(List<HomeworkEntity> homeworkList) {
-        return super.generate(getAddForm() + '\n' + getHomeworkList(homeworkList));
-    }
-
-    private String getAddForm() {
-        return """
-            <details open>
-                <summary>Добавить</summary>
-                <form method="post" action="/homework">
-                    <div>
-                        <label>
-                            Дисциплина:
-                            <input type="text" name="discipline_name" required />
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            Дедлайн:
-                            <input type="date" name="deadline" />
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            Содержимое:
-                            <textarea name="contents" rows="5" cols="33" required></textarea>
-                        </label>
-                    </div>
-                    <div>
-                        <input type="submit" value="Отправить">
-                    </div>
-                </form>
-            </details>
-            """;
+        return super.generate(getHomeworkList(homeworkList));
     }
 
     private String getUpdateForm(long id) {
