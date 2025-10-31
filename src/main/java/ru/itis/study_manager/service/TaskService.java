@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class TaskService extends Service {
+public class TaskService {
     private final TaskDao data;
 
     public List<TaskEntity> getAll(UserEntity user) {

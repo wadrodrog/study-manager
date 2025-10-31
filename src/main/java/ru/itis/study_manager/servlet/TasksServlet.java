@@ -8,12 +8,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import ru.itis.study_manager.entity.UserEntity;
 import ru.itis.study_manager.entity.TaskEntity;
 import ru.itis.study_manager.service.TaskService;
+import ru.itis.study_manager.util.ServletUtil;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
-
-import static ru.itis.study_manager.config.ApplicationListener.JSP_BASE;
 
 @WebServlet("/tasks")
 public class TasksServlet extends HttpServlet {
@@ -26,22 +25,19 @@ public class TasksServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("title", "Задачи");
-        req.setAttribute("css", List.of("form", "tasks"));
-        req.setAttribute("js", List.of("tasks"));
-        req.setAttribute("content", "tasks");
-        req.setAttribute("authorized", service.isAuthorized(req));
-
-        UserEntity user = service.getCurrentUser(req);
+        UserEntity user = ServletUtil.getCurrentUser(req);
         List<TaskEntity> tasks = service.getAll(user);
         req.setAttribute("tasks", tasks);
 
-        req.getRequestDispatcher(JSP_BASE).forward(req, resp);
+        ServletUtil.showPage(
+                req, resp,
+                "Задачи", "tasks", List.of("form", "tasks"), List.of("tasks")
+        );
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        UserEntity user = service.getCurrentUser(req);
+        UserEntity user = ServletUtil.getCurrentUser(req);
         if (user == null) {
             resp.sendError(403);
             return;
@@ -70,7 +66,7 @@ public class TasksServlet extends HttpServlet {
     }
 
     protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        UserEntity user = service.getCurrentUser(req);
+        UserEntity user = ServletUtil.getCurrentUser(req);
         if (user == null) {
             resp.sendError(403);
             return;
@@ -115,7 +111,7 @@ public class TasksServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        UserEntity user = service.getCurrentUser(req);
+        UserEntity user = ServletUtil.getCurrentUser(req);
         if (user == null) {
             resp.sendError(403);
             return;

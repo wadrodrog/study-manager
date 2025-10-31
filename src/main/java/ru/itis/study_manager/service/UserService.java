@@ -7,7 +7,7 @@ import ru.itis.study_manager.entity.UserEntity;
 import ru.itis.study_manager.util.RegexUtil;
 
 @RequiredArgsConstructor
-public class UserService extends Service {
+public class UserService {
     private final UserDao userData;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private final RegexUtil usernameValidator = new RegexUtil("^[a-zA-Z0-9_]{1,255}$");

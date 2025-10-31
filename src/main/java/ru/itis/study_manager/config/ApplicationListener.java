@@ -10,8 +10,6 @@ import ru.itis.study_manager.service.UserService;
 
 @WebListener
 public class ApplicationListener implements ServletContextListener {
-    public static final String JSP_BASE = "/jsp/base.jsp";
-
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         sce.getServletContext().setAttribute(
