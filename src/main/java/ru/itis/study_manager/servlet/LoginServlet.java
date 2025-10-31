@@ -5,7 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.itis.study_manager.dto.UserDto;
+import ru.itis.study_manager.entity.UserEntity;
 import ru.itis.study_manager.service.UserService;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class LoginServlet extends HttpServlet {
         String password = req.getParameter("password");
 
         try {
-            UserDto user = service.authenticateUser(username, password);
+            UserEntity user = service.authenticateUser(username, password);
             if (user == null) {
                 resp.sendRedirect("/login?error=Wrong username or password");
                 return;

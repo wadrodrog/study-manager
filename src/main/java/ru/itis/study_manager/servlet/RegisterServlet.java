@@ -5,7 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.itis.study_manager.dto.UserDto;
+import ru.itis.study_manager.entity.UserEntity;
 import ru.itis.study_manager.service.UserService;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class RegisterServlet extends HttpServlet {
         }
 
         try {
-            UserDto user = service.registerUser(username, password);
+            UserEntity user = service.registerUser(username, password);
             if (user == null) {
                 resp.sendRedirect("/register?error=Username already exists");
                 return;

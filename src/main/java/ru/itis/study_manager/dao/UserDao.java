@@ -1,13 +1,13 @@
-package ru.itis.study_manager.data;
+package ru.itis.study_manager.dao;
 
-import ru.itis.study_manager.dto.UserDto;
+import ru.itis.study_manager.entity.UserEntity;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserData extends DataManager {
-    public UserData() {
+public class UserDao extends DaoManager {
+    public UserDao() {
         try {
             super.getStatement().executeUpdate("""
                     create table if not exists usr (
@@ -40,7 +40,7 @@ public class UserData extends DataManager {
         }
     }
 
-    public UserDto getUserDto(long userId) {
+    public UserEntity getUserDto(long userId) {
         try (PreparedStatement preparedStatement = super.getPreparedStatement("""
                 select username from usr where user_id = ?;
                 """)) {
@@ -49,7 +49,7 @@ public class UserData extends DataManager {
             if (!resultSet.next()) {
                 return null;
             }
-            return new UserDto(
+            return new UserEntity(
                     userId,
                     resultSet.getString("username")
             );
@@ -58,7 +58,7 @@ public class UserData extends DataManager {
         }
     }
 
-    public UserDto getUserDto(String username) {
+    public UserEntity getUserDto(String username) {
         try (PreparedStatement preparedStatement = super.getPreparedStatement("""
                 select user_id from usr where username = ?;
                 """)) {
@@ -67,7 +67,7 @@ public class UserData extends DataManager {
             if (!resultSet.next()) {
                 return null;
             }
-            return new UserDto(
+            return new UserEntity(
                     resultSet.getLong("user_id"),
                     username
             );

@@ -1,4 +1,4 @@
-package ru.itis.study_manager.data;
+package ru.itis.study_manager.dao;
 
 import ru.itis.study_manager.entity.TaskEntity;
 import ru.itis.study_manager.entity.TaskStatus;
@@ -10,8 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaskData extends DataManager {
-    public TaskData() {
+public class TaskDao extends DaoManager {
+    public TaskDao() {
         try {
             super.getStatement().executeUpdate("""
             create table if not exists tasks (
@@ -75,27 +75,6 @@ public class TaskData extends DataManager {
             """)) {
             preparedStatement.setLong(1, taskId);
             preparedStatement.setLong(2, userId);
-            preparedStatement.execute();
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    public void update(
-            long taskId, long userId,
-            String title, String contents, TaskStatus status, Date due
-    ) {
-        try (PreparedStatement preparedStatement = super.getPreparedStatement("""
-            update tasks
-            set title = ?, contents = ?, status = ?, due = ?
-            where task_id = ? and user_id = ?;
-            """)) {
-            preparedStatement.setString(1, title);
-            preparedStatement.setString(2, contents);
-            preparedStatement.setString(3, status.name);
-            preparedStatement.setDate(4, due);
-            preparedStatement.setLong(5, taskId);
-            preparedStatement.setLong(6, userId);
             preparedStatement.execute();
         } catch (SQLException | ClassNotFoundException e) {
             throw new IllegalStateException(e);

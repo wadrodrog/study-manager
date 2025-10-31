@@ -2,13 +2,13 @@ package ru.itis.study_manager.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.itis.study_manager.data.UserData;
-import ru.itis.study_manager.dto.UserDto;
+import ru.itis.study_manager.dao.UserDao;
+import ru.itis.study_manager.entity.UserEntity;
 import ru.itis.study_manager.util.RegexUtil;
 
 @RequiredArgsConstructor
 public class UserService extends Service {
-    private final UserData userData;
+    private final UserDao userData;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private final RegexUtil usernameValidator = new RegexUtil("^[a-zA-Z0-9_]{1,255}$");
     private final RegexUtil passwordValidator = new RegexUtil("^.{8,255}$");
@@ -29,7 +29,7 @@ public class UserService extends Service {
         return passwordValidator.validate(password);
     }
 
-    public UserDto registerUser(String username, String password) throws IllegalArgumentException {
+    public UserEntity registerUser(String username, String password) throws IllegalArgumentException {
         if (!validateUsername(username) || !validatePassword(password)) {
             throw new IllegalArgumentException("Invalid input");
         }
@@ -42,7 +42,7 @@ public class UserService extends Service {
         return userData.getUserDto(userId);
     }
 
-    public UserDto authenticateUser(String username, String rawPassword) throws IllegalArgumentException {
+    public UserEntity authenticateUser(String username, String rawPassword) throws IllegalArgumentException {
         if (!validateUsername(username) || !validatePassword(rawPassword)) {
             throw new IllegalArgumentException("Invalid input");
         }

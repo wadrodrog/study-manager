@@ -5,7 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.itis.study_manager.dto.UserDto;
+import ru.itis.study_manager.entity.UserEntity;
 import ru.itis.study_manager.entity.TaskEntity;
 import ru.itis.study_manager.service.TaskService;
 
@@ -32,7 +32,7 @@ public class TasksServlet extends HttpServlet {
         req.setAttribute("content", "tasks");
         req.setAttribute("authorized", service.isAuthorized(req));
 
-        UserDto user = service.getCurrentUser(req);
+        UserEntity user = service.getCurrentUser(req);
         List<TaskEntity> tasks = service.getAll(user);
         req.setAttribute("tasks", tasks);
 
@@ -41,7 +41,7 @@ public class TasksServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        UserDto user = service.getCurrentUser(req);
+        UserEntity user = service.getCurrentUser(req);
         if (user == null) {
             resp.sendError(403);
             return;
@@ -70,7 +70,7 @@ public class TasksServlet extends HttpServlet {
     }
 
     protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        UserDto user = service.getCurrentUser(req);
+        UserEntity user = service.getCurrentUser(req);
         if (user == null) {
             resp.sendError(403);
             return;
@@ -115,7 +115,7 @@ public class TasksServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        UserDto user = service.getCurrentUser(req);
+        UserEntity user = service.getCurrentUser(req);
         if (user == null) {
             resp.sendError(403);
             return;
