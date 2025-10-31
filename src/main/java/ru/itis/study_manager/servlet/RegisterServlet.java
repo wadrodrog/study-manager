@@ -50,7 +50,7 @@ public class RegisterServlet extends HttpServlet {
                 return;
             }
             service.setCurrentUser(req, user);
-            resp.sendRedirect("/welcome");
+            resp.sendRedirect("/dashboard");
         } catch (IllegalArgumentException e) {
             resp.sendRedirect("/register?error=" + e.getMessage());
         }
