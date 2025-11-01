@@ -7,6 +7,12 @@
         <c:forEach var="cssItem" items="${css}">
         <link href="/static/css/${cssItem}.css" rel="stylesheet">
         </c:forEach>
+        <c:if test="${authorized}">
+        <script src="/static/js/theme.js" data-authorized></script>
+        </c:if>
+        <c:if test="${!authorized}">
+        <script src="/static/js/theme.js"></script>
+        </c:if>
         <c:forEach var="jsItem" items="${js}">
         <script src="/static/js/${jsItem}.js"></script>
         </c:forEach>

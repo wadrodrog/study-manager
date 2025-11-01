@@ -13,7 +13,8 @@ public class UserDao extends DaoManager {
                     create table if not exists usr (
                         user_id bigserial primary key,
                         username varchar(255) not null unique,
-                        password_hash varchar(255) not null
+                        password_hash varchar(255) not null,
+                        theme smallint not null check (theme > -1 and theme < 3) default 0
                     );
                     """);
         } catch (SQLException e) {
@@ -40,7 +41,7 @@ public class UserDao extends DaoManager {
         }
     }
 
-    public UserEntity getUserDto(long userId) {
+    public UserEntity getUser(long userId) {
         try (PreparedStatement preparedStatement = super.getPreparedStatement("""
                 select username from usr where user_id = ?;
                 """)) {
@@ -51,16 +52,17 @@ public class UserDao extends DaoManager {
             }
             return new UserEntity(
                     userId,
-                    resultSet.getString("username")
+                    resultSet.getString("username"),
+                    (short) 0
             );
         } catch (SQLException | ClassNotFoundException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    public UserEntity getUserDto(String username) {
+    public UserEntity getUser(String username) {
         try (PreparedStatement preparedStatement = super.getPreparedStatement("""
-                select user_id from usr where username = ?;
+                select user_id, theme from usr where username = ?;
                 """)) {
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -69,7 +71,8 @@ public class UserDao extends DaoManager {
             }
             return new UserEntity(
                     resultSet.getLong("user_id"),
-                    username
+                    username,
+                    resultSet.getShort("theme")
             );
         } catch (SQLException | ClassNotFoundException e) {
             throw new IllegalStateException(e);
@@ -86,6 +89,20 @@ public class UserDao extends DaoManager {
                 return null;
             }
             return resultSet.getString("password_hash");
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public void updateTheme(long userId, short theme) {
+        try (PreparedStatement preparedStatement = super.getPreparedStatement("""
+                update usr
+                set theme = ?
+                where user_id = ?;
+                """)) {
+            preparedStatement.setShort(1, theme);
+            preparedStatement.setLong(2, userId);
+            preparedStatement.execute();
         } catch (SQLException | ClassNotFoundException e) {
             throw new IllegalStateException(e);
         }

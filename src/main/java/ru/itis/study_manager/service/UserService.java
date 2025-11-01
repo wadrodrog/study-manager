@@ -8,7 +8,7 @@ import ru.itis.study_manager.util.RegexUtil;
 
 @RequiredArgsConstructor
 public class UserService {
-    private final UserDao userData;
+    private final UserDao dao;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private final RegexUtil usernameValidator = new RegexUtil("^[a-zA-Z0-9_]{1,255}$");
     private final RegexUtil passwordValidator = new RegexUtil("^.{8,255}$");
@@ -34,12 +34,12 @@ public class UserService {
             throw new IllegalArgumentException("Invalid input");
         }
 
-        Long userId = userData.createUser(username, encoder.encode(password));
+        Long userId = dao.createUser(username, encoder.encode(password));
         if (userId == null) {
             return null;
         }
 
-        return userData.getUserDto(userId);
+        return dao.getUser(userId);
     }
 
     public UserEntity authenticateUser(String username, String rawPassword) throws IllegalArgumentException {
@@ -47,11 +47,22 @@ public class UserService {
             throw new IllegalArgumentException("Invalid input");
         }
 
-        String passwordHash = userData.getPasswordHash(username);
+        String passwordHash = dao.getPasswordHash(username);
         if (encoder.matches(rawPassword, passwordHash)) {
-            return userData.getUserDto(username);
+            return dao.getUser(username);
         }
 
         return null;
+    }
+
+    public void updateTheme(UserEntity user, short theme) throws IllegalArgumentException, IllegalStateException {
+        if (user == null) {
+            throw new IllegalStateException("Not authorized");
+        }
+        if (theme < 0 || theme > 2) {
+            throw new IllegalArgumentException("Invalid theme");
+        }
+        dao.updateTheme(user.getUserId(), theme);
+        user.setTheme(theme);
     }
 }

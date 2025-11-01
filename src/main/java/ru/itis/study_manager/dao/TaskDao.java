@@ -18,8 +18,8 @@ public class TaskDao extends DaoManager {
                 task_id bigserial primary key,
                 user_id bigserial not null,
                 title varchar(255) not null,
-                contents varchar,
-                attachments varchar[] default '{}',
+                contents varchar not null default '',
+                attachments varchar[] not null default '{}',
                 status varchar not null,
                 due date
             );

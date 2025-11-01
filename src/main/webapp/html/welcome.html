@@ -4,9 +4,7 @@
         <meta charset="UTF-8">
         <title>Главная</title>
         <link href="/favicon.ico" rel="icon">
-        <link href="/css/style.css" rel="stylesheet">
         <link href="/css/elements.css" rel="stylesheet">
-        <script src="/js/theme.js"></script>
         <script src="/js/carousel.js"></script>
         <script src="/js/interactive_menu.js"></script>
     </head>
@@ -48,43 +46,6 @@
                     <button onclick="next();">➡️</button>
                 </div>
             </div>
-            <div class="form">
-                <p>Обратная связь</p>
-                <form action="/feedback" method="post">
-                  <div>
-                    <label for="name">Имя: </label>
-                    <input type="text" name="name" id="form-name" autocomplete="name" pattern="[a-zA-Zа-яА-ЯёЁ]{2,}" required />
-                  </div>
-                  <div>
-                    <label for="email">Email: </label>
-                    <input type="email" name="email" id="form-email" autocomplete="email" required />
-                  </div>
-                  <div>
-                      <label for="message" style="display: block;">Сообщение:</label>
-                      <textarea id="form-message" name="message" rows="5" cols="33" minlength="30" required></textarea>
-                  </div>
-                  <div>
-                    <input id="form-send" type="submit" value="Отправить" />
-                  </div>
-                </form>
-            </div>
         </main>
-        <footer>
-            <fieldset id="theme-switcher">
-                <legend>Тема</legend>
-                <div class="option">
-                    <input type="radio" id="theme-auto" name="theme" value="auto" onchange="saveTheme('auto')" checked />
-                    <label for="theme-auto">🖥️</label>
-                </div>
-                <div class="option">
-                    <input type="radio" id="theme-light" name="theme" value="light" onchange="saveTheme('light')" />
-                    <label for="theme-light">☀️</label>
-                </div>
-                <div class="option">
-                    <input type="radio" id="theme-dark" name="theme" value="dark" onchange="saveTheme('dark')" />
-                    <label for="theme-dark">🌙</label>
-                </div>
-            </fieldset>
-        </footer>
     </body>
 </html>

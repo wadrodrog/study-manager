@@ -46,11 +46,11 @@ public class ServletUtil {
         if (js != null) {
             request.setAttribute("js", js);
         }
-        request.setAttribute("authorized", isAuthorized(request));
-    }
-
-    public static boolean isAuthorized(HttpServletRequest request) {
-        return getCurrentUser(request) != null;
+        UserEntity user = getCurrentUser(request);
+        request.setAttribute("authorized", user != null);
+        if (user != null) {
+            request.setAttribute("theme", user.getTheme());
+        }
     }
 
     public static UserEntity getCurrentUser(HttpServletRequest request) {
