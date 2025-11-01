@@ -46,6 +46,7 @@ public class ServletUtil {
         if (js != null) {
             request.setAttribute("js", js);
         }
+
         UserEntity user = getCurrentUser(request);
         request.setAttribute("authorized", user != null);
         if (user != null) {

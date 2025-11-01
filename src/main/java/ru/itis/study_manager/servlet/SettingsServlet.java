@@ -20,6 +20,11 @@ public class SettingsServlet extends HttpServlet {
         this.service = (UserService) getServletContext().getAttribute("userService");
     }
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletUtil.showPage(req, resp, "Настройки", "settings");
+    }
+
     // For some unknown reason, to implement PATCH method you need to write this thing.
     // Just overriding doPatch doesn't work.
     @Override
