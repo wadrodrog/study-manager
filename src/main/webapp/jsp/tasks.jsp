@@ -42,3 +42,8 @@
             <button onclick="deleteTask(${task.taskId})">Удалить</button>
         </div>
         </c:forEach>
+        <p>
+            <c:if test="${page > 1}"><a href="/tasks?page=${page - 1}">⬅️</a></c:if>
+            <c:if test="${maxPage > 1}">${page}/${maxPage}</c:if>
+            <c:if test="${page < maxPage}"><a href="/tasks?page=${page + 1}">➡️</a></c:if>
+        </p>

@@ -44,12 +44,21 @@ public class TaskDao extends DaoManager {
         }
     }
 
-    public List<TaskEntity> getAll(long userId) {
+    public List<TaskEntity> getAll(long userId, int page, int size) {
+        if (page < 1) {
+            page = 1;
+        }
+        if (size < 1) {
+            size = 1;
+        }
         List<TaskEntity> tasks = new ArrayList<>();
         try (PreparedStatement preparedStatement = super.getPreparedStatement("""
-            select * from tasks where user_id = ?;
+            select * from tasks where user_id = ?
+            limit ? offset ?;
             """)) {
             preparedStatement.setLong(1, userId);
+            preparedStatement.setInt(2, size);
+            preparedStatement.setInt(3, (page - 1) * size);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 tasks.add(new TaskEntity(
@@ -63,6 +72,22 @@ public class TaskDao extends DaoManager {
                 ));
             }
             return tasks;
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public int getCount(long userId) {
+        try (PreparedStatement preparedStatement = super.getPreparedStatement("""
+            select count(*) from tasks where user_id = ?;
+            """)) {
+            preparedStatement.setLong(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            int count = 0;
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+            return count;
         } catch (SQLException | ClassNotFoundException e) {
             throw new IllegalStateException(e);
         }

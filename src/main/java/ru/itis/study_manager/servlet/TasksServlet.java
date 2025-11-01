@@ -25,9 +25,34 @@ public class TasksServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String sizeParam = req.getParameter("size");
+        int size = 10;
+        if (sizeParam != null) {
+            try {
+                size = Integer.parseInt(sizeParam);
+            } catch (NumberFormatException ignored) {}
+        }
+
         UserEntity user = ServletUtil.getCurrentUser(req);
-        List<TaskEntity> tasks = service.getAll(user);
+        int count = service.getCount(user);
+        int maxPage = (count - 1) / size + 1;
+
+        String pageParam = req.getParameter("page");
+        int page = 1;
+        if (pageParam != null) {
+            try {
+                page = Integer.parseInt(pageParam);
+                if (page > maxPage) {
+                    page = maxPage;
+                }
+            } catch (NumberFormatException ignored) {}
+        }
+
+        List<TaskEntity> tasks = service.getAll(user, page, size);
+
         req.setAttribute("tasks", tasks);
+        req.setAttribute("page", page);
+        req.setAttribute("maxPage", maxPage);
 
         ServletUtil.showPage(
                 req, resp,

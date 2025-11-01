@@ -14,11 +14,18 @@ import java.util.List;
 public class TaskService {
     private final TaskDao data;
 
-    public List<TaskEntity> getAll(UserEntity user) {
+    public List<TaskEntity> getAll(UserEntity user, int page, int size) {
         if (user == null) {
             return new ArrayList<>();
         }
-        return data.getAll(user.getUserId());
+        return data.getAll(user.getUserId(), page, size);
+    }
+
+    public int getCount(UserEntity user) {
+        if (user == null) {
+            return 0;
+        }
+        return data.getCount(user.getUserId());
     }
 
     public void create(UserEntity user, String title, String contents, Date due) {
