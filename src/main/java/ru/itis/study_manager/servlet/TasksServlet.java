@@ -5,8 +5,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.itis.study_manager.entity.UserEntity;
+import ru.itis.study_manager.dto.UserDto;
 import ru.itis.study_manager.entity.TaskEntity;
+import ru.itis.study_manager.model.Task;
 import ru.itis.study_manager.service.TaskService;
 import ru.itis.study_manager.util.ServletUtil;
 
@@ -33,7 +34,7 @@ public class TasksServlet extends HttpServlet {
             } catch (NumberFormatException ignored) {}
         }
 
-        UserEntity user = ServletUtil.getCurrentUser(req);
+        UserDto user = ServletUtil.getCurrentUser(req);
         int count = service.getCount(user);
         int maxPage = (count - 1) / size + 1;
 
@@ -62,7 +63,7 @@ public class TasksServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        UserEntity user = ServletUtil.getCurrentUser(req);
+        UserDto user = ServletUtil.getCurrentUser(req);
         if (user == null) {
             resp.sendError(403);
             return;
@@ -76,67 +77,68 @@ public class TasksServlet extends HttpServlet {
             return;
         }
 
-        service.delete(user, taskId);
+        service.delete(new Task(taskId, user.getUserId()));
     }
 
+    // TODO: POST?
     // For some unknown reason, to implement PATCH method you need to write this thing.
     // Just overriding doPatch doesn't work.
-    @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (req.getMethod().equals("PATCH")) {
-            this.doPatch(req, resp);
-            return;
-        }
-        super.service(req, resp);
-    }
-
-    protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        UserEntity user = ServletUtil.getCurrentUser(req);
-        if (user == null) {
-            resp.sendError(403);
-            return;
-        }
-
-        long taskId;
-        try {
-            taskId = Long.parseLong(req.getParameter("task_id"));
-        } catch (NumberFormatException e) {
-            resp.sendError(400, "Invalid task_id");
-            return;
-        }
-
-        // Due
-        String due = req.getParameter("due");
-        if (due != null) {
-            try {
-                service.updateDue(user, taskId, due);
-                resp.setStatus(200);
-                return;
-            } catch (IllegalArgumentException e) {
-                resp.sendError(400, e.getMessage());
-                return;
-            }
-        }
-
-        // Status
-        String status = req.getParameter("status");
-        if (status != null) {
-            try {
-                service.updateStatus(user, taskId, status);
-                resp.setStatus(200);
-                return;
-            } catch (IllegalArgumentException e) {
-                resp.sendError(400, e.getMessage());
-                return;
-            }
-        }
-
-        resp.sendError(400, "No parameters were provided");
-    }
+//    @Override
+//    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        if (req.getMethod().equals("PATCH")) {
+//            this.doPatch(req, resp);
+//            return;
+//        }
+//        super.service(req, resp);
+//    }
+//
+//    protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+//        UserEntity user = ServletUtil.getCurrentUser(req);
+//        if (user == null) {
+//            resp.sendError(403);
+//            return;
+//        }
+//
+//        long taskId;
+//        try {
+//            taskId = Long.parseLong(req.getParameter("task_id"));
+//        } catch (NumberFormatException e) {
+//            resp.sendError(400, "Invalid task_id");
+//            return;
+//        }
+//
+//        // Due
+//        String due = req.getParameter("due");
+//        if (due != null) {
+//            try {
+//                service.updateDue(user, taskId, due);
+//                resp.setStatus(200);
+//                return;
+//            } catch (IllegalArgumentException e) {
+//                resp.sendError(400, e.getMessage());
+//                return;
+//            }
+//        }
+//
+//        // Status
+//        String status = req.getParameter("status");
+//        if (status != null) {
+//            try {
+//                service.updateStatus(user, taskId, status);
+//                resp.setStatus(200);
+//                return;
+//            } catch (IllegalArgumentException e) {
+//                resp.sendError(400, e.getMessage());
+//                return;
+//            }
+//        }
+//
+//        resp.sendError(400, "No parameters were provided");
+//    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        UserEntity user = ServletUtil.getCurrentUser(req);
+        UserDto user = ServletUtil.getCurrentUser(req);
         if (user == null) {
             resp.sendError(403);
             return;
@@ -151,8 +153,9 @@ public class TasksServlet extends HttpServlet {
         String contents = req.getParameter("contents");
 
         Date due = null;
+        String dueParameter = null;
         try {
-            String dueParameter = req.getParameter("due");
+            dueParameter = req.getParameter("due");
             if (dueParameter != null && !dueParameter.isEmpty()) {
                 due = Date.valueOf(dueParameter);
             }
@@ -161,7 +164,9 @@ public class TasksServlet extends HttpServlet {
             return;
         }
 
-        service.create(user, title, contents, due);
+        service.create(new Task(
+                null, user.getUserId(), title, contents, null, "in_progress", dueParameter
+        ));
 
         resp.sendRedirect("/tasks");
     }

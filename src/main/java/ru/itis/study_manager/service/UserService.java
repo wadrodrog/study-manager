@@ -1,68 +1,57 @@
 package ru.itis.study_manager.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import ru.itis.study_manager.converter.UserEntityToDtoConverter;
+import ru.itis.study_manager.converter.UserModelToEntityConverter;
 import ru.itis.study_manager.dao.UserDao;
+import ru.itis.study_manager.dto.UserDto;
 import ru.itis.study_manager.entity.UserEntity;
-import ru.itis.study_manager.util.RegexUtil;
+import ru.itis.study_manager.model.User;
+import ru.itis.study_manager.util.HashUtil;
+import ru.itis.study_manager.util.validator.PasswordValidator;
+import ru.itis.study_manager.util.validator.UsernameValidator;
+import ru.itis.study_manager.util.validator.Validator;
 
 @RequiredArgsConstructor
 public class UserService {
     private final UserDao dao;
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-    private final RegexUtil usernameValidator = new RegexUtil("^[a-zA-Z0-9_]{1,255}$");
-    private final RegexUtil passwordValidator = new RegexUtil("^.{8,255}$");
+    private final UserModelToEntityConverter modelToEntityConverter;
+    private final UserEntityToDtoConverter entityToDtoConverter;
+    private final Validator usernameValidator = new UsernameValidator();
+    private final Validator passwordValidator = new PasswordValidator();
 
+    public UserDto registerUser(User user) throws IllegalArgumentException {
+        if (!validateUser(user)) {
+            throw new IllegalArgumentException("Invalid user data");
+        }
+        UserEntity entity = dao.create(modelToEntityConverter.convert(user));
+        return entityToDtoConverter.convert(entity);
+    }
+
+    public UserDto authenticateUser(User user) throws IllegalArgumentException {
+        if (!validateUser(user)) {
+            throw new IllegalArgumentException("Invalid user data");
+        }
+        if (HashUtil.matches(user.getPassword(), dao.getPasswordHash(modelToEntityConverter.convert(user)))) {
+            UserEntity entity = dao.getUser(modelToEntityConverter.convert(user));
+            return entityToDtoConverter.convert(entity);
+        }
+        return null;
+    }
+
+    // TODO: move to converter
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean validateUsername(String username) {
-        if (username == null) {
-            return false;
-        }
-        return usernameValidator.validate(username.trim());
+        return usernameValidator.validate(username);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean validatePassword(String password) {
-        if (password == null) {
-            return false;
-        }
         return passwordValidator.validate(password);
     }
 
-    public UserEntity registerUser(String username, String password) throws IllegalArgumentException {
-        if (!validateUsername(username) || !validatePassword(password)) {
-            throw new IllegalArgumentException("Invalid input");
-        }
-
-        Long userId = dao.createUser(username, encoder.encode(password));
-        if (userId == null) {
-            return null;
-        }
-
-        return dao.getUser(userId);
-    }
-
-    public UserEntity authenticateUser(String username, String rawPassword) throws IllegalArgumentException {
-        if (!validateUsername(username) || !validatePassword(rawPassword)) {
-            throw new IllegalArgumentException("Invalid input");
-        }
-
-        String passwordHash = dao.getPasswordHash(username);
-        if (encoder.matches(rawPassword, passwordHash)) {
-            return dao.getUser(username);
-        }
-
-        return null;
-    }
-
-    public void updateTheme(UserEntity user, short theme) throws IllegalArgumentException, IllegalStateException {
-        if (user == null) {
-            throw new IllegalStateException("Not authorized");
-        }
-        if (theme < 0 || theme > 2) {
-            throw new IllegalArgumentException("Invalid theme");
-        }
-        dao.updateTheme(user.getUserId(), theme);
-        user.setTheme(theme);
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public boolean validateUser(User user) {
+        return validateUsername(user.getUsername()) && validatePassword(user.getPassword());
     }
 }

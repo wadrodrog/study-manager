@@ -16,9 +16,7 @@ import java.io.IOException;
 public class AuthorizationFilter extends HttpFilter {
     @Override
     public void doFilter(
-            ServletRequest request,
-            ServletResponse response,
-            FilterChain chain
+            ServletRequest request, ServletResponse response, FilterChain chain
     ) throws IOException, ServletException {
         request.setCharacterEncoding("UTF-8");
 

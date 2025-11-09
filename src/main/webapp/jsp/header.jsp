@@ -19,15 +19,15 @@
                 <fieldset id="theme-switcher">
                     <label>
                         🌗
-                        <input type="radio" id="theme-auto" name="theme" value="auto" onchange="saveTheme('auto')" <c:if test="${user.theme == 0}">checked</c:if> />
+                        <input type="radio" id="theme-auto" name="theme" value="auto" onchange="saveTheme('auto')" checked />
                     </label>
                     <label>
                         ☀️
-                        <input type="radio" id="theme-light" name="theme" value="light" onchange="saveTheme('light')" <c:if test="${user.theme == 1}">checked</c:if> />
+                        <input type="radio" id="theme-light" name="theme" value="light" onchange="saveTheme('light')" />
                     </label>
                     <label>
                         🌙
-                        <input type="radio" id="theme-dark" name="theme" value="dark" onchange="saveTheme('dark')" <c:if test="${user.theme == 2}">checked</c:if> />
+                        <input type="radio" id="theme-dark" name="theme" value="dark" onchange="saveTheme('dark')" />
                     </label>
                 </fieldset>
             </ul>

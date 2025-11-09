@@ -1,4 +1,4 @@
-package ru.itis.study_manager.entity;
+package ru.itis.study_manager.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,8 +7,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class UserEntity {
+public class User {
     private Long userId;
     private String username;
-    private String passwordHash;
+    private String password;
 }

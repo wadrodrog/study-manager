@@ -4,7 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import ru.itis.study_manager.entity.UserEntity;
+import ru.itis.study_manager.dto.UserDto;
 
 import java.io.IOException;
 import java.util.List;
@@ -47,22 +47,19 @@ public class ServletUtil {
             request.setAttribute("js", js);
         }
 
-        UserEntity user = getCurrentUser(request);
+        UserDto user = getCurrentUser(request);
         request.setAttribute("authorized", user != null);
-        if (user != null) {
-            request.setAttribute("theme", user.getTheme());
-        }
     }
 
-    public static UserEntity getCurrentUser(HttpServletRequest request) {
+    public static UserDto getCurrentUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session == null) {
             return null;
         }
-        return (UserEntity) session.getAttribute("user");
+        return (UserDto) session.getAttribute("user");
     }
 
-    public static void setCurrentUser(HttpServletRequest request, UserEntity user) {
+    public static void setCurrentUser(HttpServletRequest request, UserDto user) {
         HttpSession session = request.getSession();
         session.setAttribute("user", user);
     }

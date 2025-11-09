@@ -1,20 +1,23 @@
-package ru.itis.study_manager.entity;
+package ru.itis.study_manager.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.sql.Date;
-
 @Data
 @AllArgsConstructor
 @Builder
-public class TaskEntity {
+public class Task {
     private Long taskId;
     private long userId;
     private String title;
     private String contents;
     private String[] attachments;
-    private TaskStatus status;
-    private Date due;
+    private String status;
+    private String due;
+
+    public Task(long taskId, long userId) {
+        this.taskId = taskId;
+        this.userId = userId;
+    }
 }

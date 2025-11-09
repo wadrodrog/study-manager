@@ -5,7 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.itis.study_manager.entity.UserEntity;
+import ru.itis.study_manager.dto.UserDto;
+import ru.itis.study_manager.model.User;
 import ru.itis.study_manager.service.UserService;
 import ru.itis.study_manager.util.ServletUtil;
 
@@ -33,21 +34,25 @@ public class RegisterServlet extends HttpServlet {
         String password = req.getParameter("password");
         String repeatPassword = req.getParameter("repeat_password");
 
+        // TODO: move to frontend?
         if (!Objects.equals(password, repeatPassword)) {
             resp.sendRedirect("/register?error=Passwords do not match");
             return;
         }
 
+        User user = new User(null, username, password);
+
         try {
-            UserEntity user = service.registerUser(username, password);
-            if (user == null) {
+            UserDto registeredUser = service.registerUser(user);
+            if (registeredUser == null) {
                 resp.sendRedirect("/register?error=Username already exists");
                 return;
             }
-            ServletUtil.setCurrentUser(req, user);
+            ServletUtil.setCurrentUser(req, registeredUser);
             resp.sendRedirect("/dashboard");
-        } catch (IllegalArgumentException e) {
-            resp.sendRedirect("/register?error=" + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Register error: " + e.getMessage());
+            resp.sendRedirect("/register?error=Uh-oh");
         }
     }
 }
