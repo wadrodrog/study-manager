@@ -17,37 +17,44 @@ public class TaskDao extends Dao {
                 "tasks",
                 "task_id bigserial primary key",
                 "user_id bigserial not null",
-                "title varchar(255) not null",
+                "created_at date not null default current_date",
+                "title varchar(256) not null",
                 "contents varchar not null default ''",
                 "attachments varchar[] not null default '{}'",
                 "status task_status not null default 'incomplete'",
+                "priority smallint not null default 0",
                 "due date"
         );
     }
 
     public void create(TaskEntity entity) {
         String query = """
-                insert into tasks (user_id, title, contents, status, due)
-                values (?, ?, ?, 'Incomplete', ?);
+                insert into tasks (user_id, title, contents, status, priority, due)
+                values (?, ?, ?, ?::task_status, ?, ?);
                 """;
-        try (PreparedStatement preparedStatement = super.getPreparedStatement(query)) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
             preparedStatement.setLong(1, entity.getUserId());
             preparedStatement.setString(2, entity.getTitle());
             preparedStatement.setString(3, entity.getContents());
-            preparedStatement.setDate(4, entity.getDue());
+            preparedStatement.setString(4, entity.getStatus().name().toLowerCase());
+            preparedStatement.setShort(5, entity.getPriority());
+            preparedStatement.setDate(6, entity.getDue());
             preparedStatement.execute();
         } catch (SQLException e) {
             throw new DatabaseException("Error while executing query: " + e.getMessage());
         }
     }
 
-    public List<TaskEntity> getAll(long userId, int page, int size) {
-        page = Math.clamp(page, 1, Integer.MAX_VALUE);
-        size = Math.clamp(size, 1, 100);
+    public List<TaskEntity> getAll(long userId, int page, int size, String sort, boolean descending) {
         List<TaskEntity> tasks = new ArrayList<>();
 
-        String query = "select * from tasks where user_id = ? limit ? offset ?;";
-        try (PreparedStatement preparedStatement = super.getPreparedStatement(query)) {
+        String query = """
+                select
+                    task_id, user_id, created_at, title, contents, status, priority, due
+                from tasks where user_id = ? order by %s %s limit ? offset ?;
+                """.formatted(sort, descending ? "desc" : "asc");
+
+        try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
             preparedStatement.setLong(1, userId);
             preparedStatement.setInt(2, size);
             preparedStatement.setInt(3, (page - 1) * size);
@@ -57,10 +64,12 @@ public class TaskDao extends Dao {
                 tasks.add(new TaskEntity(
                         resultSet.getLong("task_id"),
                         resultSet.getLong("user_id"),
+                        resultSet.getDate("created_at"),
                         resultSet.getString("title"),
                         resultSet.getString("contents"),
-                        (String[]) resultSet.getArray("attachments").getArray(),
-                        resultSet.getObject("status", TaskStatus.class),
+                        null,
+                        TaskStatus.valueOf(resultSet.getString("status").toUpperCase()),
+                        resultSet.getShort("priority"),
                         resultSet.getDate("due")
                 ));
             }
@@ -72,7 +81,7 @@ public class TaskDao extends Dao {
 
     public int getCount(long userId) {
         String query = "select count(*) from tasks where user_id = ?;";
-        try (PreparedStatement preparedStatement = super.getPreparedStatement(query)) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
             preparedStatement.setLong(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -92,7 +101,7 @@ public class TaskDao extends Dao {
                 set status = ?, due = ?
                 where task_id = ? and user_id = ?;
                 """;
-        try (PreparedStatement preparedStatement = super.getPreparedStatement(query)) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
             preparedStatement.setObject(1, entity.getStatus());
             preparedStatement.setDate(2, entity.getDue());
             preparedStatement.setLong(3, entity.getTaskId());
@@ -105,7 +114,7 @@ public class TaskDao extends Dao {
 
     public void delete(TaskEntity entity) {
         String query = "delete from tasks where task_id = ? and user_id = ?;";
-        try (PreparedStatement preparedStatement = super.getPreparedStatement(query)) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
             preparedStatement.setLong(1, entity.getTaskId());
             preparedStatement.setLong(2, entity.getUserId());
             preparedStatement.execute();

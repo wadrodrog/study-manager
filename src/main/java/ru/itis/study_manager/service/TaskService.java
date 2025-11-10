@@ -6,6 +6,7 @@ import ru.itis.study_manager.dao.TaskDao;
 import ru.itis.study_manager.dto.UserDto;
 import ru.itis.study_manager.entity.TaskEntity;
 import ru.itis.study_manager.model.Task;
+import ru.itis.study_manager.util.task.TasksView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +16,14 @@ public class TaskService {
     private final TaskDao dao;
     private final TaskConverter converter;
 
-    public List<TaskEntity> getAll(UserDto user, int page, int size) {
+    public List<TaskEntity> getAll(UserDto user, TasksView view) {
         if (user == null) {
             return new ArrayList<>();
         }
-        return dao.getAll(user.getUserId(), page, size);
+        return dao.getAll(
+                user.getUserId(), view.getPage(), view.getSize(),
+                view.getSort().name().toLowerCase(), view.isDescending()
+        );
     }
 
     public int getCount(UserDto user) {

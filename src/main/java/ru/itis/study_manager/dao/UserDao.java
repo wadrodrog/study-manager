@@ -24,7 +24,7 @@ public class UserDao extends Dao {
                 on conflict (username) do nothing
                 returning user_id;
                 """;
-        try (PreparedStatement preparedStatement = super.getPreparedStatement(query)) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
             preparedStatement.setString(1, entity.getUsername());
             preparedStatement.setString(2, entity.getPasswordHash());
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -41,7 +41,7 @@ public class UserDao extends Dao {
 
     public UserEntity getUser(UserEntity entity) throws DatabaseException {
         String query = "select user_id from usr where username = ?;";
-        try (PreparedStatement preparedStatement = super.getPreparedStatement(query)) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
             preparedStatement.setString(1, entity.getUsername());
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -57,7 +57,7 @@ public class UserDao extends Dao {
 
     public String getPasswordHash(UserEntity entity) throws DatabaseException {
         String query = "select password_hash from usr where username = ?;";
-        try (PreparedStatement preparedStatement = super.getPreparedStatement(query)) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
             preparedStatement.setString(1, entity.getUsername());
             ResultSet resultSet = preparedStatement.executeQuery();
 

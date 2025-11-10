@@ -1,5 +1,5 @@
 form {
-    div {
+    div:not(:first-child) {
         margin-top: 12px;
     }
 
@@ -21,4 +21,15 @@ form {
 
 p.error {
     color: red;
+}
+
+details {
+    border: 1px solid;
+    padding: 12px;
+
+    form {
+        border: 1px solid;
+        padding: 12px;
+        margin: 12px;
+    }
 }

@@ -10,9 +10,9 @@ import ru.itis.study_manager.entity.TaskEntity;
 import ru.itis.study_manager.model.Task;
 import ru.itis.study_manager.service.TaskService;
 import ru.itis.study_manager.util.servlet.Page;
+import ru.itis.study_manager.util.task.TasksView;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.List;
 
 @WebServlet("/tasks")
@@ -26,39 +26,49 @@ public class TasksServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String sizeParam = req.getParameter("size");
-        int size = 10;
-        if (sizeParam != null) {
-            try {
-                size = Integer.parseInt(sizeParam);
-            } catch (NumberFormatException ignored) {}
-        }
-
         UserDto user = new Page(req).getCurrentUser();
-        int count = service.getCount(user);
-        int maxPage = (count - 1) / size + 1;
+        int totalCount = service.getCount(user);
 
-        String pageParam = req.getParameter("page");
-        int page = 1;
-        if (pageParam != null) {
-            try {
-                page = Integer.parseInt(pageParam);
-                if (page > maxPage) {
-                    page = maxPage;
-                }
-            } catch (NumberFormatException ignored) {}
-        }
+        TasksView view = new TasksView(
+                req.getParameter("size"),
+                req.getParameter("page"),
+                req.getParameter("sort"),
+                req.getParameter("descending"),
+                totalCount
+        );
 
-        List<TaskEntity> tasks = service.getAll(user, page, size);
+        List<TaskEntity> tasks = service.getAll(user, view);
 
         req.setAttribute("tasks", tasks);
-        req.setAttribute("page", page);
-        req.setAttribute("maxPage", maxPage);
+        req.setAttribute("page", view.getPage());
+        req.setAttribute("maxPage", view.getMaxPage());
 
         new Page(req, resp).show(
                 "Задачи", "tasks",
                 List.of("form", "tasks"), List.of("tasks")
         );
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        UserDto user = new Page(req).getCurrentUser();
+
+        String title = req.getParameter("title");
+        String contents = req.getParameter("contents");
+        String priority = req.getParameter("priority");
+        String due = req.getParameter("due");
+        String status = req.getParameter("status");
+
+        try {
+            service.create(new Task(
+                    null, user.getUserId(), null,
+                    title, contents, null, status,
+                    priority, due
+            ));
+            resp.sendRedirect("/tasks");
+        } catch (IllegalArgumentException e) {
+            resp.sendError(400, e.getMessage());
+        }
     }
 
     @Override
@@ -135,39 +145,4 @@ public class TasksServlet extends HttpServlet {
 //
 //        resp.sendError(400, "No parameters were provided");
 //    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        UserDto user = new Page(req).getCurrentUser();
-        if (user == null) {
-            resp.sendError(403);
-            return;
-        }
-
-        String title = req.getParameter("title");
-        if (title.length() > 255) {
-            resp.sendError(413, "Title must be less than 256 characters.");
-            return;
-        }
-
-        String contents = req.getParameter("contents");
-
-        Date due = null;
-        String dueParameter = null;
-        try {
-            dueParameter = req.getParameter("due");
-            if (dueParameter != null && !dueParameter.isEmpty()) {
-                due = Date.valueOf(dueParameter);
-            }
-        } catch (IllegalArgumentException e) {
-            resp.sendError(400, "Invalid date format for deadline.");
-            return;
-        }
-
-        service.create(new Task(
-                null, user.getUserId(), title, contents, null, "in_progress", dueParameter
-        ));
-
-        resp.sendRedirect("/tasks");
-    }
 }

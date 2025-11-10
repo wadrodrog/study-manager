@@ -4,10 +4,10 @@
             <summary>Новая задача</summary>
             <form method="post" action="/tasks">
                 <div>
-                    <label>
-                        Заголовок:
-                        <input type="text" name="title" required />
-                    </label>
+                    <input type="text" name="title" placeholder="Заголовок" required />
+                </div>
+                <div>
+                    <textarea name="contents" rows="5" cols="33" placeholder="Сделать домашку..."></textarea>
                 </div>
                 <div>
                     <label>
@@ -17,8 +17,18 @@
                 </div>
                 <div>
                     <label>
-                        Содержимое:
-                        <textarea name="contents" rows="5" cols="33"></textarea>
+                        Приоритет:
+                        <input type="number" name="priority" min="-100" max="100" value="0" />
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        Статус:
+                        <select name="status">
+                            <option value="incomplete" selected>Не завершено</option>
+                            <option value="in_progress">В процессе</option>
+                            <option value="complete">Завершено</option>
+                        </select>
                     </label>
                 </div>
                 <div>

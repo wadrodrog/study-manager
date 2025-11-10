@@ -12,11 +12,13 @@ public class TaskConverter implements Converter<Task, TaskEntity> {
         return TaskEntity.builder()
                 .taskId(task.getTaskId())
                 .userId(task.getUserId())
-                .title(task.getTitle())
-                .contents(task.getContents())
+                .createdAt(task.getCreatedAt())
+                .title(task.getTitle().substring(0, Math.min(256, task.getTitle().length())))
+                .contents(task.getContents() == null ? null : task.getContents())
                 .attachments(task.getAttachments())
                 .status(TaskStatus.valueOf(task.getStatus().toUpperCase()))
-                .due(Date.valueOf(task.getDue()))
+                .priority(Short.parseShort(task.getPriority()))
+                .due(task.getDue() == null || task.getDue().isEmpty() ? null : Date.valueOf(task.getDue()))
                 .build();
     }
 }
