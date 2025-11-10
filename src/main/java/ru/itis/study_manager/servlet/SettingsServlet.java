@@ -5,9 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.itis.study_manager.entity.UserEntity;
 import ru.itis.study_manager.service.UserService;
-import ru.itis.study_manager.util.ServletUtil;
+import ru.itis.study_manager.util.servlet.Page;
 
 import java.io.IOException;
 
@@ -22,7 +21,7 @@ public class SettingsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ServletUtil.showPage(req, resp, "Настройки", "settings");
+        new Page(req, resp).show("Настройки", "settings");
     }
 
     // For some unknown reason, to implement PATCH method you need to write this thing.

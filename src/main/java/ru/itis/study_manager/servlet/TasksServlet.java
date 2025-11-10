@@ -9,7 +9,7 @@ import ru.itis.study_manager.dto.UserDto;
 import ru.itis.study_manager.entity.TaskEntity;
 import ru.itis.study_manager.model.Task;
 import ru.itis.study_manager.service.TaskService;
-import ru.itis.study_manager.util.ServletUtil;
+import ru.itis.study_manager.util.servlet.Page;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -34,7 +34,7 @@ public class TasksServlet extends HttpServlet {
             } catch (NumberFormatException ignored) {}
         }
 
-        UserDto user = ServletUtil.getCurrentUser(req);
+        UserDto user = new Page(req).getCurrentUser();
         int count = service.getCount(user);
         int maxPage = (count - 1) / size + 1;
 
@@ -55,15 +55,15 @@ public class TasksServlet extends HttpServlet {
         req.setAttribute("page", page);
         req.setAttribute("maxPage", maxPage);
 
-        ServletUtil.showPage(
-                req, resp,
-                "Задачи", "tasks", List.of("form", "tasks"), List.of("tasks")
+        new Page(req, resp).show(
+                "Задачи", "tasks",
+                List.of("form", "tasks"), List.of("tasks")
         );
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        UserDto user = ServletUtil.getCurrentUser(req);
+        UserDto user = new Page(req).getCurrentUser();
         if (user == null) {
             resp.sendError(403);
             return;
@@ -138,7 +138,7 @@ public class TasksServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        UserDto user = ServletUtil.getCurrentUser(req);
+        UserDto user = new Page(req).getCurrentUser();
         if (user == null) {
             resp.sendError(403);
             return;

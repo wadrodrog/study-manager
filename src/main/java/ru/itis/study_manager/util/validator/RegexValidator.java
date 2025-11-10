@@ -2,7 +2,7 @@ package ru.itis.study_manager.util.validator;
 
 import java.util.regex.Pattern;
 
-public class RegexValidator implements Validator {
+public class RegexValidator implements Validator<String> {
     private final Pattern pattern;
 
     public RegexValidator(String pattern) {

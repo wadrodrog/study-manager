@@ -8,11 +8,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import ru.itis.study_manager.dto.UserDto;
 import ru.itis.study_manager.model.User;
 import ru.itis.study_manager.service.UserService;
-import ru.itis.study_manager.util.ServletUtil;
+import ru.itis.study_manager.util.servlet.Page;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
@@ -25,34 +24,29 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ServletUtil.showPage(req, resp, "Регистрация", "register", List.of("form"));
+        new Page(req, resp).show(
+                "Регистрация", "register",
+                List.of("form"), List.of("repeat_password")
+        );
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-        String repeatPassword = req.getParameter("repeat_password");
-
-        // TODO: move to frontend?
-        if (!Objects.equals(password, repeatPassword)) {
-            resp.sendRedirect("/register?error=Passwords do not match");
-            return;
-        }
 
         User user = new User(null, username, password);
 
         try {
             UserDto registeredUser = service.registerUser(user);
             if (registeredUser == null) {
-                resp.sendRedirect("/register?error=Username already exists");
+                resp.sendRedirect("/register?error=User already exists");
                 return;
             }
-            ServletUtil.setCurrentUser(req, registeredUser);
+            new Page(req).setCurrentUser(registeredUser);
             resp.sendRedirect("/dashboard");
-        } catch (Exception e) {
-            System.err.println("Register error: " + e.getMessage());
-            resp.sendRedirect("/register?error=Uh-oh");
+        } catch (IllegalArgumentException e) {
+            resp.sendError(400, e.getMessage());
         }
     }
 }

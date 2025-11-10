@@ -5,6 +5,8 @@ import ru.itis.study_manager.exception.DatabaseException;
 import java.sql.*;
 
 public class Dao {
+    private Connection connection;
+
     public void createTable(String table, String... columns) throws DatabaseException {
         StringBuilder query = new StringBuilder();
         query.append("create table if not exists ").append(table).append(" (\n");
@@ -22,7 +24,6 @@ public class Dao {
     }
 
     public void createEnum(String name, String... elements) throws DatabaseException {
-        // TODO: do not create if exists
         StringBuilder query = new StringBuilder();
         query.append("create type ").append(name).append(" as enum (");
         for (String element : elements) {
@@ -33,8 +34,8 @@ public class Dao {
 
         try {
             getStatement().executeUpdate(query.toString());
-        } catch (SQLException e) {
-            throw new DatabaseException("Error while creating enum: " + e.getMessage());
+        } catch (SQLException ignored) {
+            //throw new DatabaseException("Error while creating enum: " + e.getMessage());
         }
     }
 
@@ -55,10 +56,13 @@ public class Dao {
     }
 
     private Connection getConnection() throws SQLException, ClassNotFoundException {
-        Class.forName("org.postgresql.Driver");
-        String DATABASE_URL = "jdbc:postgresql://localhost:5432/study_manager";
-        String DATABASE_USER = "postgres";
-        String DATABASE_PASSWORD = "postgres";
-        return DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
+        if (connection == null) {
+            Class.forName("org.postgresql.Driver");
+            String DATABASE_URL = "jdbc:postgresql://localhost:5432/study_manager";
+            String DATABASE_USER = "postgres";
+            String DATABASE_PASSWORD = "postgres";
+            connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
+        }
+        return connection;
     }
 }

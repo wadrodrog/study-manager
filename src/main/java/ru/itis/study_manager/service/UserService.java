@@ -8,8 +8,7 @@ import ru.itis.study_manager.dto.UserDto;
 import ru.itis.study_manager.entity.UserEntity;
 import ru.itis.study_manager.model.User;
 import ru.itis.study_manager.util.HashUtil;
-import ru.itis.study_manager.util.validator.PasswordValidator;
-import ru.itis.study_manager.util.validator.UsernameValidator;
+import ru.itis.study_manager.util.validator.UserValidator;
 import ru.itis.study_manager.util.validator.Validator;
 
 @RequiredArgsConstructor
@@ -17,11 +16,10 @@ public class UserService {
     private final UserDao dao;
     private final UserModelToEntityConverter modelToEntityConverter;
     private final UserEntityToDtoConverter entityToDtoConverter;
-    private final Validator usernameValidator = new UsernameValidator();
-    private final Validator passwordValidator = new PasswordValidator();
+    private final Validator<User> validator = new UserValidator();
 
     public UserDto registerUser(User user) throws IllegalArgumentException {
-        if (!validateUser(user)) {
+        if (!validator.validate(user)) {
             throw new IllegalArgumentException("Invalid user data");
         }
         UserEntity entity = dao.create(modelToEntityConverter.convert(user));
@@ -29,7 +27,7 @@ public class UserService {
     }
 
     public UserDto authenticateUser(User user) throws IllegalArgumentException {
-        if (!validateUser(user)) {
+        if (!validator.validate(user)) {
             throw new IllegalArgumentException("Invalid user data");
         }
         if (HashUtil.matches(user.getPassword(), dao.getPasswordHash(modelToEntityConverter.convert(user)))) {
@@ -37,21 +35,5 @@ public class UserService {
             return entityToDtoConverter.convert(entity);
         }
         return null;
-    }
-
-    // TODO: move to converter
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean validateUsername(String username) {
-        return usernameValidator.validate(username);
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean validatePassword(String password) {
-        return passwordValidator.validate(password);
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean validateUser(User user) {
-        return validateUsername(user.getUsername()) && validatePassword(user.getPassword());
     }
 }

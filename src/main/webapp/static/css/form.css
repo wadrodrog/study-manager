@@ -1,10 +1,15 @@
 form {
+    div {
+        margin-top: 12px;
+    }
+
     input:valid[required],
     textarea:valid {
         border: 3px solid green;
     }
 
     input:invalid[required],
+    input:valid[required].invalid,
     textarea:invalid {
         border: 3px solid red;
     }

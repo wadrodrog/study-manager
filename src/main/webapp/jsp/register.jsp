@@ -3,36 +3,32 @@
         <form method="post" action="/register">
             <div>
                 <label>
-                    Имя пользователя:
+                    Имя пользователя:<br>
                     <input type="username" name="username" maxlength="255" pattern="^[a-zA-Z0-9_]{1,255}$" required />
                 </label>
             </div>
             <div>
                 <label>
-                    Пароль:
-                    <input type="password" name="password" minlength="8" maxlength="255" required />
+                    Пароль:<br>
+                    <input type="password" name="password" id="password" oninput="check();" minlength="8" maxlength="255" required />
                 </label>
             </div>
             <div>
                 <label>
-                    Повторите пароль:
-                   <input type="password" name="repeat_password" minlength="8" maxlength="255" required />
+                    Повторите пароль:<br>
+                   <input type="password" id="repeat-password" oninput="check();" minlength="8" maxlength="255" required />
                 </label>
             </div>
             <div>
-                <input type="submit" value="Зарегистрироваться">
+                <input type="submit" id="submit" value="Зарегистрироваться" disabled>
             </div>
         </form>
         <p class="error">
             <c:choose>
-            <c:when test="${param.error == 'Passwords do not match'}">
-            Пароли не совпадают.
-            </c:when>
-            <c:when test="${param.error == 'Username already exists'}">
+            <c:when test="${param.error == null}"></c:when>
+            <c:when test="${param.error == 'User already exists'}">
             Пользователь с таким именем уже существует.
             </c:when>
-            <c:otherwise>
-            ${param.error}
-            </c:otherwise>
+            <c:otherwise>Не удалось зарегистрироваться.</c:otherwise>
             </c:choose>
         </p>

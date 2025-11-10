@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import ru.itis.study_manager.dto.UserDto;
 import ru.itis.study_manager.model.User;
 import ru.itis.study_manager.service.UserService;
-import ru.itis.study_manager.util.ServletUtil;
+import ru.itis.study_manager.util.servlet.Page;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,7 +24,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ServletUtil.showPage(req, resp, "Авторизация", "login", List.of("form"));
+        new Page(req, resp).show("Авторизация", "login", List.of("form"));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class LoginServlet extends HttpServlet {
                 resp.sendRedirect("/login?error=Wrong username or password");
                 return;
             }
-            ServletUtil.setCurrentUser(req, authenticatedUser);
+            new Page(req).setCurrentUser(authenticatedUser);
             resp.sendRedirect("/dashboard");
         } catch (IllegalArgumentException e) {
             System.err.println("Login error: " + e.getMessage());
