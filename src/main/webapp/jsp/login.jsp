@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
         <form method="post" action="/login">
             <div>
@@ -17,5 +18,11 @@
             </div>
         </form>
         <p class="error">
-            <%= request.getParameter("error") == null ? "" : "Неверное имя пользователя или пароль." %>
+            <c:choose>
+            <c:when test="${param.error == null}"></c:when>
+            <c:when test="${param.error == 'Invalid credentials'}">
+            Неверное имя пользователя или пароль.
+            </c:when>
+            <c:otherwise>Не удалось войти в аккаунт.</c:otherwise>
+            </c:choose>
         </p>

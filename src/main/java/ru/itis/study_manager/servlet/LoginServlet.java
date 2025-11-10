@@ -37,14 +37,13 @@ public class LoginServlet extends HttpServlet {
         try {
             UserDto authenticatedUser = service.authenticateUser(user);
             if (authenticatedUser == null) {
-                resp.sendRedirect("/login?error=Wrong username or password");
+                resp.sendRedirect("/login?error=Invalid credentials");
                 return;
             }
             new Page(req).setCurrentUser(authenticatedUser);
             resp.sendRedirect("/dashboard");
         } catch (IllegalArgumentException e) {
-            System.err.println("Login error: " + e.getMessage());
-            resp.sendRedirect("/login?error=Uh-oh");
+            resp.sendError(400, e.getMessage());
         }
     }
 }
