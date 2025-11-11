@@ -39,4 +39,59 @@ nav.view-control {
     &.in-progress {
         background-color: light-dark(#f8f9a4, #a4a56b);
     }
+
+    .title {
+        .editor {
+            &.inactive {
+                display: none;
+            }
+            &.active {
+                display: block;
+            }
+            input {
+                font-size: 24px;
+                font-weight: bold;
+                width: calc(100% - 55px);
+                margin-top: 5px;
+            }
+            button {
+                font-size: 24px;
+            }
+        }
+        .display {
+            &.inactive {
+                display: none;
+            }
+            h2 {
+                display: inline-block;
+                margin: 8px 0 0 4px;
+                word-break: break-word;
+            }
+            button.edit {
+                display: none;
+            }
+            &:hover button.edit {
+                display: inline;
+            }
+        }
+    }
+
+    p button.edit {
+        display: none;
+    }
+
+    p:hover {
+        button.edit {
+            background: none;
+            border: none;
+        }
+
+        button.edit:hover {
+            background-color: #9195ff;
+        }
+
+        button.edit:active {
+            background-color: #6d6fbf;
+        }
+    }
 }

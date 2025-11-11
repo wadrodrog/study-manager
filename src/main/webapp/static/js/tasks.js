@@ -10,6 +10,49 @@ function updateSort() {
     window.location.href = "/tasks?sort=" + sort.value + (descending.checked ? "&descending" : "");
 }
 
+function checkTitle(id) {
+    var editor = document.querySelector("#task-" + id + " .title .editor");
+    var input = document.querySelector("#task-" + id + " .title .editor input");
+    var save = document.querySelector("#task-" + id + " .title .editor button");
+
+    var text = input.value.trim();
+    save.disabled = text.length < 1 || text.length > 256;
+}
+
+function editTitle(id) {
+    var display = document.querySelector("#task-" + id + " .title .display");
+    var h2 = document.querySelector("#task-" + id + " .title .display h2");
+    var editor = document.querySelector("#task-" + id + " .title .editor");
+    var input = document.querySelector("#task-" + id + " .title .editor input");
+
+    editor.className = "editor";
+    display.className = "display inactive";
+    input.value = h2.innerText;
+}
+
+function saveTitle(id) {
+    var display = document.querySelector("#task-" + id + " .title .display");
+    var h2 = document.querySelector("#task-" + id + " .title .display h2");
+    var editor = document.querySelector("#task-" + id + " .title .editor");
+    var input = document.querySelector("#task-" + id + " .title .editor input");
+
+    editor.className = "editor inactive";
+    display.className = "display";
+    h2.innerText = input.value;
+
+    fetch(`/tasks?task_id=${id}&title=${h2.innerText}`, {method: "PATCH"})
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Update task title: " + response.statusText);
+            }
+            return response;
+        });
+}
+
+function editContents(id) {
+    console.log("edit contents " + id);
+}
+
 function confirmDelete(id) {
     const title = document.querySelector("#task-" + id + " > h2");
     const text = `Вы точно хотите удалить задачу «${title.innerText}»?`;

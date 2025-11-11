@@ -92,34 +92,55 @@ public class TasksServlet extends HttpServlet {
         service.delete(new Task(taskId, user.getUserId()));
     }
 
-    // TODO: POST?
     // For some unknown reason, to implement PATCH method you need to write this thing.
     // Just overriding doPatch doesn't work.
-//    @Override
-//    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        if (req.getMethod().equals("PATCH")) {
-//            this.doPatch(req, resp);
-//            return;
-//        }
-//        super.service(req, resp);
-//    }
-//
-//    protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-//        UserEntity user = ServletUtil.getCurrentUser(req);
-//        if (user == null) {
-//            resp.sendError(403);
-//            return;
-//        }
-//
-//        long taskId;
-//        try {
-//            taskId = Long.parseLong(req.getParameter("task_id"));
-//        } catch (NumberFormatException e) {
-//            resp.sendError(400, "Invalid task_id");
-//            return;
-//        }
-//
-//        // Due
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (req.getMethod().equals("PATCH")) {
+            this.doPatch(req, resp);
+            return;
+        }
+        super.service(req, resp);
+    }
+
+    protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        UserDto user = new Page(req).getCurrentUser();
+        if (user == null) {
+            resp.sendError(403);
+            return;
+        }
+
+        long taskId;
+        try {
+            taskId = Long.parseLong(req.getParameter("task_id"));
+        } catch (NumberFormatException e) {
+            resp.sendError(400, "Invalid task_id");
+            return;
+        }
+
+        String title = req.getParameter("title");
+
+        TaskEntity currentTask = service.get(user, taskId);
+        Task updatedTask = new Task(
+                currentTask.getTaskId(),
+                currentTask.getUserId(),
+                currentTask.getCreatedAt(),
+                title != null ? title : currentTask.getTitle(),
+                currentTask.getContents(),
+                currentTask.getAttachments(),
+                currentTask.getStatus().name(),
+                currentTask.getPriority() + "",
+                currentTask.getDue().toString()
+        );
+
+        try {
+            service.update(updatedTask);
+            resp.setStatus(200);
+        } catch (Exception e) {
+            System.err.println("Error while updating task: " + e.getMessage());
+            resp.setStatus(400);
+        }
+
 //        String due = req.getParameter("due");
 //        if (due != null) {
 //            try {
@@ -132,7 +153,6 @@ public class TasksServlet extends HttpServlet {
 //            }
 //        }
 //
-//        // Status
 //        String status = req.getParameter("status");
 //        if (status != null) {
 //            try {
@@ -144,7 +164,5 @@ public class TasksServlet extends HttpServlet {
 //                return;
 //            }
 //        }
-//
-//        resp.sendError(400, "No parameters were provided");
-//    }
+    }
 }

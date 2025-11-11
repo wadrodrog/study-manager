@@ -45,6 +45,37 @@ public class TaskDao extends Dao {
         }
     }
 
+    public TaskEntity get(long taskId, long userId) {
+        String query = """
+                select
+                    created_at, title, contents, status, priority, due
+                from tasks where task_id = ? and user_id = ?;
+                """;
+
+        try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
+            preparedStatement.setLong(1, userId);
+            preparedStatement.setLong(2, taskId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return new TaskEntity(
+                        taskId,
+                        userId,
+                        resultSet.getDate("created_at"),
+                        resultSet.getString("title"),
+                        resultSet.getString("contents"),
+                        null,
+                        TaskStatus.valueOf(resultSet.getString("status").toUpperCase()),
+                        resultSet.getShort("priority"),
+                        resultSet.getDate("due")
+                );
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new DatabaseException("Error while executing query: " + e.getMessage());
+        }
+    }
+
     public List<TaskEntity> getAll(long userId, int page, int size, String sort, boolean descending) {
         List<TaskEntity> tasks = new ArrayList<>();
 
@@ -98,14 +129,15 @@ public class TaskDao extends Dao {
     public void update(TaskEntity entity) {
         String query = """
                 update tasks
-                set status = ?, due = ?
+                set title = ?, status = ?::task_status, due = ?
                 where task_id = ? and user_id = ?;
                 """;
         try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
-            preparedStatement.setObject(1, entity.getStatus());
-            preparedStatement.setDate(2, entity.getDue());
-            preparedStatement.setLong(3, entity.getTaskId());
-            preparedStatement.setLong(4, entity.getUserId());
+            preparedStatement.setString(1, entity.getTitle());
+            preparedStatement.setString(2, entity.getStatus().name().toLowerCase());
+            preparedStatement.setDate(3, entity.getDue());
+            preparedStatement.setLong(4, entity.getTaskId());
+            preparedStatement.setLong(5, entity.getUserId());
             preparedStatement.execute();
         } catch (SQLException e) {
             throw new DatabaseException("Error while executing query: " + e.getMessage());

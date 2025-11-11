@@ -16,6 +16,13 @@ public class TaskService {
     private final TaskDao dao;
     private final TaskConverter converter;
 
+    public TaskEntity get(UserDto user, long taskId) {
+        if (user == null) {
+            return null;
+        }
+        return dao.get(taskId, user.getUserId());
+    }
+
     public List<TaskEntity> getAll(UserDto user, TasksView view) {
         if (user == null) {
             return new ArrayList<>();
