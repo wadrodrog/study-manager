@@ -1,3 +1,28 @@
+details {
+    border: 1px solid;
+    padding: 8px;
+
+    form {
+        border: 1px solid;
+        padding: 12px;
+        margin: 12px;
+    }
+}
+
+nav.view-control {
+    margin: 12px 0 12px 0;
+    padding: 8px;
+    border: 1px solid;
+
+    .pager {
+        display: inline;
+        border-left: 1px solid;
+        border-right: 1px solid;
+        padding: 4px;
+        margin: 0 8px 0 8px;
+    }
+}
+
 .task {
     padding: 1px 8px 1px 8px;
     border: 1px solid gray;

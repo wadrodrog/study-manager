@@ -17,7 +17,7 @@ public class TaskDao extends Dao {
                 "tasks",
                 "task_id bigserial primary key",
                 "user_id bigserial not null",
-                "created_at date not null default current_date",
+                "created_at timestamp not null default current_timestamp",
                 "title varchar(256) not null",
                 "contents varchar not null default ''",
                 "attachments varchar[] not null default '{}'",

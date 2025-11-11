@@ -1,3 +1,15 @@
+var sort;
+var descending;
+
+window.addEventListener("load", function () {
+    sort = document.getElementById("sort");
+    descending = document.getElementById("descending");
+});
+
+function updateSort() {
+    window.location.href = "/tasks?sort=" + sort.value + (descending.checked ? "&descending" : "");
+}
+
 function confirmDelete(id) {
     const title = document.querySelector("#task-" + id + " > h2");
     const text = `Вы точно хотите удалить задачу «${title.innerText}»?`;

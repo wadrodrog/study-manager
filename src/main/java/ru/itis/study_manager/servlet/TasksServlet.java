@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.itis.study_manager.dto.UserDto;
 import ru.itis.study_manager.entity.TaskEntity;
+import ru.itis.study_manager.exception.DatabaseException;
 import ru.itis.study_manager.model.Task;
 import ru.itis.study_manager.service.TaskService;
 import ru.itis.study_manager.util.servlet.Page;
@@ -42,6 +43,7 @@ public class TasksServlet extends HttpServlet {
         req.setAttribute("tasks", tasks);
         req.setAttribute("page", view.getPage());
         req.setAttribute("maxPage", view.getMaxPage());
+        req.setAttribute("totalCount", totalCount);
 
         new Page(req, resp).show(
                 "Задачи", "tasks",
@@ -66,8 +68,8 @@ public class TasksServlet extends HttpServlet {
                     priority, due
             ));
             resp.sendRedirect("/tasks");
-        } catch (IllegalArgumentException e) {
-            resp.sendError(400, e.getMessage());
+        } catch (IllegalArgumentException | NullPointerException | DatabaseException e) {
+            resp.sendError(400);
         }
     }
 

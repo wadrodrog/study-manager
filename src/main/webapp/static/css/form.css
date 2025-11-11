@@ -22,14 +22,3 @@ form {
 p.error {
     color: red;
 }
-
-details {
-    border: 1px solid;
-    padding: 12px;
-
-    form {
-        border: 1px solid;
-        padding: 12px;
-        margin: 12px;
-    }
-}
