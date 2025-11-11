@@ -89,6 +89,6 @@
                 <option value="in_progress" <c:if test="${task.status == 'IN_PROGRESS'}">selected</c:if>>В процессе</option>
                 <option value="complete" <c:if test="${task.status == 'COMPLETE'}">selected</c:if>>Завершено</option>
             </select>
-            <button onclick="deleteTask(${task.taskId})">Удалить</button>
+            <button onclick="deleteTask(${task.taskId})" title="Удалить задачу">🗑️</button>
         </div>
         </c:forEach>
