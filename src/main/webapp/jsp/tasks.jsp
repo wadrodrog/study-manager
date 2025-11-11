@@ -4,10 +4,10 @@
             <summary>Новая задача</summary>
             <form method="post" action="/tasks">
                 <div>
-                    <input type="text" name="title" placeholder="Заголовок" pattern="(.|\s)*\S(.|\s)*" required />
+                    <input type="text" name="title" placeholder="Заголовок" pattern="(.|\s)*\S(.|\s)*" maxlength="256" required />
                 </div>
                 <div>
-                    <textarea name="contents" rows="5" cols="33" placeholder="Сделать домашку..."></textarea>
+                    <textarea name="contents" rows="5" cols="33" placeholder="Сделать домашку..." maxlength="10000"></textarea>
                 </div>
                 <div>
                     <label>
