@@ -129,16 +129,17 @@ public class TaskDao extends Dao {
     public void update(TaskEntity entity) {
         String query = """
                 update tasks
-                set title = ?, contents = ?, status = ?::task_status, due = ?
+                set title = ?, contents = ?, status = ?::task_status, priority = ?, due = ?
                 where task_id = ? and user_id = ?;
                 """;
         try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
             preparedStatement.setString(1, entity.getTitle());
             preparedStatement.setString(2, entity.getContents());
             preparedStatement.setString(3, entity.getStatus().name().toLowerCase());
-            preparedStatement.setDate(4, entity.getDue());
-            preparedStatement.setLong(5, entity.getTaskId());
-            preparedStatement.setLong(6, entity.getUserId());
+            preparedStatement.setShort(4, entity.getPriority());
+            preparedStatement.setDate(5, entity.getDue());
+            preparedStatement.setLong(6, entity.getTaskId());
+            preparedStatement.setLong(7, entity.getUserId());
             preparedStatement.execute();
         } catch (SQLException e) {
             throw new DatabaseException("Error while executing query: " + e.getMessage());

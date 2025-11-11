@@ -77,13 +77,17 @@
                 </div>
             </div>
             <label>
+                Приоритет:
+                <input type="number" name="priority" min="-100" max="100" value="${task.priority}" onchange="updatePriority(${task.taskId})" />
+            </label>
+            <label>
                 Дедлайн:
                 <input type="date" name="due" value="${task.due}" onchange="updateDue(${task.taskId})" />
             </label>
             <select name="status" onchange="updateStatus(${task.taskId})">
-                <option value="Incomplete" <c:if test="${task.status == 'INCOMPLETE'}">selected</c:if>>Не завершено</option>
-                <option value="In progress" <c:if test="${task.status == 'IN_PROGRESS'}">selected</c:if>>В процессе</option>
-                <option value="Complete" <c:if test="${task.status == 'COMPLETE'}">selected</c:if>>Завершено</option>
+                <option value="incomplete" <c:if test="${task.status == 'INCOMPLETE'}">selected</c:if>>Не завершено</option>
+                <option value="in_progress" <c:if test="${task.status == 'IN_PROGRESS'}">selected</c:if>>В процессе</option>
+                <option value="complete" <c:if test="${task.status == 'COMPLETE'}">selected</c:if>>Завершено</option>
             </select>
             <button onclick="deleteTask(${task.taskId})">Удалить</button>
         </div>

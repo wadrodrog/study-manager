@@ -120,6 +120,8 @@ public class TasksServlet extends HttpServlet {
 
         String title = req.getParameter("title");
         String contents = req.getParameter("contents");
+        String status = req.getParameter("status");
+        String priority = req.getParameter("priority");
         String due = req.getParameter("due");
 
         TaskEntity currentTask = service.get(user, taskId);
@@ -130,8 +132,8 @@ public class TasksServlet extends HttpServlet {
                 title != null ? title : currentTask.getTitle(),
                 contents != null ? contents : currentTask.getContents(),
                 currentTask.getAttachments(),
-                currentTask.getStatus().name(),
-                currentTask.getPriority() + "",
+                status != null ? status : currentTask.getStatus().name(),
+                priority != null ? priority : currentTask.getPriority() + "",
                 due != null ? due : (currentTask.getDue() == null ? null : currentTask.getDue().toString())
         );
 
@@ -142,29 +144,5 @@ public class TasksServlet extends HttpServlet {
             System.err.println("Error while updating task: " + e.getMessage());
             resp.setStatus(400);
         }
-
-//        String due = req.getParameter("due");
-//        if (due != null) {
-//            try {
-//                service.updateDue(user, taskId, due);
-//                resp.setStatus(200);
-//                return;
-//            } catch (IllegalArgumentException e) {
-//                resp.sendError(400, e.getMessage());
-//                return;
-//            }
-//        }
-//
-//        String status = req.getParameter("status");
-//        if (status != null) {
-//            try {
-//                service.updateStatus(user, taskId, status);
-//                resp.setStatus(200);
-//                return;
-//            } catch (IllegalArgumentException e) {
-//                resp.sendError(400, e.getMessage());
-//                return;
-//            }
-//        }
     }
 }

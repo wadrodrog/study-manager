@@ -85,6 +85,19 @@ function confirmDelete(id) {
     return confirm(text);
 }
 
+function updatePriority(id) {
+    const priority = document.querySelector("#task-" + id + " input[type=number]");
+    const value = priority.value;
+
+    fetch(`/tasks?task_id=${id}&priority=${value}`, {method: "PATCH"})
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Update task priority error: " + response.statusText);
+            }
+            return response;
+        });
+}
+
 function deleteTask(id) {
     if (!confirmDelete(id)) {
         return;
