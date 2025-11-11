@@ -58,7 +58,7 @@
         <div id="task-${task.taskId}" class="task">
             <div class="title">
                 <div class="editor inactive">
-                    <input type="text" oninput="checkTitle(${task.taskId});" maxlength=256 placeholder="Заголовок задачи">
+                    <input type="text" oninput="checkTitle(${task.taskId});" maxlength="256" placeholder="Заголовок задачи">
                     <button onclick="saveTitle(${task.taskId});">✅</button>
                 </div>
                 <div class="display">
@@ -66,10 +66,16 @@
                     <button class="edit" title="Редактировать заголовок" onclick="editTitle(${task.taskId});">🖍️</button>
                 </div>
             </div>
-            <p>
-                ${task.contents}
-                <button class="edit" title="Редактировать содержимое" onclick="editContents(${task.taskId});">🖍️</button>
-            </p>
+            <div class="contents">
+                <div class="editor inactive">
+                    <textarea rows="5" cols="33" placeholder="Сделать домашку..." maxlength="10000"></textarea>
+                    <button onclick="saveContents(${task.taskId});">✅</button>
+                </div>
+                <div class="display">
+                    <p>${task.contents}</p>
+                    <button class="edit" title="Редактировать содержимое" onclick="editContents(${task.taskId});">🖍️</button>
+                </div>
+            </div>
             <label>
                 Дедлайн:
                 <input type="date" name="due" value="${task.due}" onchange="updateDue(${task.taskId})" />

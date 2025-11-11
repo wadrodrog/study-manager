@@ -45,9 +45,6 @@ nav.view-control {
             &.inactive {
                 display: none;
             }
-            &.active {
-                display: block;
-            }
             input {
                 font-size: 24px;
                 font-weight: bold;
@@ -76,22 +73,26 @@ nav.view-control {
         }
     }
 
-    p button.edit {
-        display: none;
-    }
-
-    p:hover {
-        button.edit {
-            background: none;
-            border: none;
+    .contents {
+        .editor {
+            &.inactive {
+                display: none;
+            }
         }
-
-        button.edit:hover {
-            background-color: #9195ff;
-        }
-
-        button.edit:active {
-            background-color: #6d6fbf;
+        .display {
+            &.inactive {
+                display: none;
+            }
+            p {
+                display: inline-block;
+                word-break: break-word;
+            }
+            button.edit {
+                display: none;
+            }
+            &:hover button.edit {
+                display: inline;
+            }
         }
     }
 }

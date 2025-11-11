@@ -119,6 +119,8 @@ public class TasksServlet extends HttpServlet {
         }
 
         String title = req.getParameter("title");
+        String contents = req.getParameter("contents");
+        String due = req.getParameter("due");
 
         TaskEntity currentTask = service.get(user, taskId);
         Task updatedTask = new Task(
@@ -126,11 +128,11 @@ public class TasksServlet extends HttpServlet {
                 currentTask.getUserId(),
                 currentTask.getCreatedAt(),
                 title != null ? title : currentTask.getTitle(),
-                currentTask.getContents(),
+                contents != null ? contents : currentTask.getContents(),
                 currentTask.getAttachments(),
                 currentTask.getStatus().name(),
                 currentTask.getPriority() + "",
-                currentTask.getDue().toString()
+                due != null ? due : (currentTask.getDue() == null ? null : currentTask.getDue().toString())
         );
 
         try {

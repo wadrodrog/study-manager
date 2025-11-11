@@ -50,7 +50,33 @@ function saveTitle(id) {
 }
 
 function editContents(id) {
-    console.log("edit contents " + id);
+    var display = document.querySelector("#task-" + id + " .contents .display");
+    var p = document.querySelector("#task-" + id + " .contents .display p");
+    var editor = document.querySelector("#task-" + id + " .contents .editor");
+    var textarea = document.querySelector("#task-" + id + " .contents .editor textarea");
+
+    editor.className = "editor";
+    display.className = "display inactive";
+    textarea.value = p.innerText;
+}
+
+function saveContents(id) {
+    var display = document.querySelector("#task-" + id + " .contents .display");
+    var p = document.querySelector("#task-" + id + " .contents .display p");
+    var editor = document.querySelector("#task-" + id + " .contents .editor");
+    var textarea = document.querySelector("#task-" + id + " .contents .editor textarea");
+
+    editor.className = "editor inactive";
+    display.className = "display";
+    p.innerText = textarea.value;
+
+    fetch(`/tasks?task_id=${id}&contents=${p.innerText}`, {method: "PATCH"})
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Update task contents: " + response.statusText);
+            }
+            return response;
+        });
 }
 
 function confirmDelete(id) {
