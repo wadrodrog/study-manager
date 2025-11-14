@@ -11,4 +11,10 @@ public class User {
     private Long userId;
     private String username;
     private String password;
+    private short theme;
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }

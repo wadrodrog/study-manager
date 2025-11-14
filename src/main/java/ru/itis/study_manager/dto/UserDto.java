@@ -10,4 +10,5 @@ import lombok.Data;
 public class UserDto {
     private long userId;
     private String username;
+    private short theme;
 }

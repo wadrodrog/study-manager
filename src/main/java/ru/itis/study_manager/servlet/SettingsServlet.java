@@ -5,10 +5,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.itis.study_manager.dto.UserDto;
+import ru.itis.study_manager.model.User;
 import ru.itis.study_manager.service.UserService;
 import ru.itis.study_manager.util.servlet.Page;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/settings")
 public class SettingsServlet extends HttpServlet {
@@ -21,46 +24,43 @@ public class SettingsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        new Page(req, resp).show("Настройки", "settings");
+        new Page(req, resp).show(
+                "Настройки", "settings", List.of("form"), List.of("repeat_password")
+        );
     }
 
-    // For some unknown reason, to implement PATCH method you need to write this thing.
-    // Just overriding doPatch doesn't work.
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (req.getMethod().equals("PATCH")) {
-            this.doPatch(req, resp);
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        UserDto user = new Page(req).getCurrentUser();
+        if (user == null) {
+            resp.sendError(403);
             return;
         }
-        super.service(req, resp);
-    }
 
-//    protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-//        UserEntity user = ServletUtil.getCurrentUser(req);
-//        if (user == null) {
-//            resp.sendError(403);
-//            return;
-//        }
-//
-//        String themeString = req.getParameter("theme");
-//        if (themeString == null) {
-//            resp.sendError(400, "Invalid theme");
-//            return;
-//        }
-//
-//        short theme = switch (themeString) {
-//            case "auto" -> 0;
-//            case "light" -> 1;
-//            case "dark" -> 2;
-//            default -> -1;
-//        };
-//        if (theme < 0) {
-//            resp.sendError(400, "Invalid theme");
-//            return;
-//        }
-//
-//        service.updateTheme(user, theme);
-//        ServletUtil.setCurrentUser(req, user);
-//        resp.setStatus(200);
-//    }
+        String currentPassword = req.getParameter("current_password");
+        String newPassword = req.getParameter("new_password");
+        String newUsername = req.getParameter("new_username");
+        String theme = req.getParameter("theme");
+
+        User userCheck = new User(user.getUsername(), currentPassword);
+        if (service.authenticateUser(userCheck) == null) {
+            resp.sendRedirect("/settings?error=Wrong password");
+            return;
+        }
+
+        User updatedUser = new User(
+                user.getUserId(),
+                newUsername != null ? newUsername : user.getUsername(),
+                newPassword,
+                theme != null ? Short.parseShort(theme) : user.getTheme()
+        );
+
+        try {
+            service.update(updatedUser);
+            resp.sendRedirect("/settings?success");
+        } catch (Exception e) {
+            System.err.println("Error while updating user: " + e.getMessage());
+            resp.sendRedirect("/settings?error");
+        }
+    }
 }

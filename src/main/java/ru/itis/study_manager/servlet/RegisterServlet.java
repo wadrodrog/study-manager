@@ -35,7 +35,7 @@ public class RegisterServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
-        User user = new User(null, username, password);
+        User user = new User(username, password);
 
         try {
             UserDto registeredUser = service.registerUser(user);
