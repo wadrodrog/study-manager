@@ -47,6 +47,9 @@ public class Page {
 
         UserDto user = getCurrentUser();
         request.setAttribute("authorized", user != null);
+        if (user != null) {
+            request.setAttribute("theme", user.getTheme());
+        }
 
         request.getRequestDispatcher(JSP_BASE).forward(request, response);
     }

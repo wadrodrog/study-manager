@@ -1,34 +1,7 @@
 :root {
     color-scheme: light dark;
-    &:has(#theme-light:checked) {
-        color-scheme: light;
-    }
-    &:has(#theme-dark:checked) {
-        color-scheme: dark;
-    }
     --text: light-dark(#000000, #ffffff);
     --bg: light-dark(#eee, #161616);
-}
-
-#theme-switcher {
-    display: inline;
-    border: none;
-    float: right;
-    padding: 0;
-
-    label {
-        display: inline;
-        padding: 4px;
-        text-shadow: 1px 1px 4px black;
-
-        input {
-            display: none;
-        }
-
-        &:has(input:checked) {
-            background-color: #9195ff;
-        }
-    }
 }
 
 header {

@@ -7,11 +7,11 @@
         <c:forEach var="cssItem" items="${css}">
         <link href="/static/css/${cssItem}.css" rel="stylesheet">
         </c:forEach>
-        <c:if test="${authorized}">
-        <script src="/static/js/theme.js" data-authorized></script>
+        <c:if test="${theme == 1}">
+        <link href="/static/css/theme/light.css" rel="stylesheet">
         </c:if>
-        <c:if test="${!authorized}">
-        <script src="/static/js/theme.js"></script>
+        <c:if test="${theme == 2}">
+        <link href="/static/css/theme/dark.css" rel="stylesheet">
         </c:if>
         <c:forEach var="jsItem" items="${js}">
         <script src="/static/js/${jsItem}.js"></script>

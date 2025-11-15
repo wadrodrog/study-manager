@@ -37,10 +37,11 @@ public class UserService {
         return null;
     }
 
-    public void update(User user) {
+    public UserDto update(User user) {
         if (user.getPassword() != null && !validator.validate(user)) {
             throw new IllegalArgumentException("Invalid user data");
         }
-        dao.update(modelToEntityConverter.convert(user));
+        UserEntity entity = dao.update(modelToEntityConverter.convert(user));
+        return entityToDtoConverter.convert(entity);
     }
 }

@@ -16,20 +16,6 @@
                 <li><a href="/register">Зарегистрироваться</a></li>
                 </c:otherwise>
                 </c:choose>
-                <fieldset id="theme-switcher">
-                    <label>
-                        🌗
-                        <input type="radio" id="theme-auto" name="theme" value="auto" onchange="saveTheme('auto')" checked />
-                    </label>
-                    <label>
-                        ☀️
-                        <input type="radio" id="theme-light" name="theme" value="light" onchange="saveTheme('light')" />
-                    </label>
-                    <label>
-                        🌙
-                        <input type="radio" id="theme-dark" name="theme" value="dark" onchange="saveTheme('dark')" />
-                    </label>
-                </fieldset>
             </ul>
         </nav>
     </header>

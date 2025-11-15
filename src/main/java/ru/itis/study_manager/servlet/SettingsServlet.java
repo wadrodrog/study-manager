@@ -25,7 +25,9 @@ public class SettingsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         new Page(req, resp).show(
-                "Настройки", "settings", List.of("form"), List.of("repeat_password")
+                "Настройки", "settings",
+                List.of("settings", "form"),
+                List.of("settings", "repeat_password")
         );
     }
 
@@ -42,10 +44,12 @@ public class SettingsServlet extends HttpServlet {
         String newUsername = req.getParameter("new_username");
         String theme = req.getParameter("theme");
 
-        User userCheck = new User(user.getUsername(), currentPassword);
-        if (service.authenticateUser(userCheck) == null) {
-            resp.sendRedirect("/settings?error=Wrong password");
-            return;
+        if (theme == null && newPassword != null || newUsername != null) {
+            User userCheck = new User(user.getUsername(), currentPassword);
+            if (service.authenticateUser(userCheck) == null) {
+                resp.sendRedirect("/settings?error=Wrong password");
+                return;
+            }
         }
 
         User updatedUser = new User(
@@ -56,7 +60,8 @@ public class SettingsServlet extends HttpServlet {
         );
 
         try {
-            service.update(updatedUser);
+            UserDto userDto = service.update(updatedUser);
+            new Page(req, resp).setCurrentUser(userDto);
             resp.sendRedirect("/settings?success");
         } catch (Exception e) {
             System.err.println("Error while updating user: " + e.getMessage());

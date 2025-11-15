@@ -41,7 +41,7 @@ public class UserDao extends Dao {
     }
 
     public UserEntity getUser(UserEntity entity) throws DatabaseException {
-        String query = "select user_id from usr where username = ?;";
+        String query = "select user_id, theme from usr where username = ?;";
         try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
             preparedStatement.setString(1, entity.getUsername());
 
@@ -50,6 +50,7 @@ public class UserDao extends Dao {
                 return null;
             }
             entity.setUserId(resultSet.getLong("user_id"));
+            entity.setTheme(resultSet.getShort("theme"));
             return entity;
         } catch (SQLException e) {
             throw new DatabaseException("Error while executing query: " + e.getMessage());
@@ -71,7 +72,7 @@ public class UserDao extends Dao {
         }
     }
 
-    public void update(UserEntity entity) {
+    public UserEntity update(UserEntity entity) {
         String query = """
                 update usr
                 set username = ?, theme = ?%s
@@ -85,6 +86,7 @@ public class UserDao extends Dao {
             }
             preparedStatement.setLong(3 + (entity.getPasswordHash() != null ? 1 : 0), entity.getUserId());
             preparedStatement.execute();
+            return entity;
         } catch (SQLException e) {
             throw new DatabaseException("Error while executing query: " + e.getMessage());
         }

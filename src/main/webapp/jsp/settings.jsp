@@ -15,6 +15,12 @@
             <c:otherwise>Настройки обновлены.</c:otherwise>
             </c:choose>
         </p>
+        Тема:
+        <select name="theme" id="theme" oninput="updateTheme();">
+            <option value="system" <c:if test="${theme == 0}">selected</c:if>>Системная</option>
+            <option value="light" <c:if test="${theme == 1}">selected</c:if>>Светлая</option>
+            <option value="dark" <c:if test="${theme == 2}">selected</c:if>>Тёмная</option>
+        </select>
         <fieldset>
             <legend>Имя пользователя</legend>
             <form method="post" action="/settings">
