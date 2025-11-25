@@ -66,4 +66,8 @@ public class Page {
         HttpSession session = request.getSession();
         session.setAttribute("user", user);
     }
+
+    public boolean isAuthorized() {
+        return getCurrentUser() != null;
+    }
 }

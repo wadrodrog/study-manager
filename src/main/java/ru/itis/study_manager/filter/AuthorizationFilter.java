@@ -1,45 +1,34 @@
 package ru.itis.study_manager.filter;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import ru.itis.study_manager.util.servlet.Page;
 
 import java.io.IOException;
 
 @WebFilter("/*")
 public class AuthorizationFilter extends HttpFilter {
     @Override
-    public void doFilter(
-            ServletRequest request, ServletResponse response, FilterChain chain
-    ) throws IOException, ServletException {
-        request.setCharacterEncoding("UTF-8");
-
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
-        String uri = httpRequest.getRequestURI();
-
-        HttpSession session = httpRequest.getSession(false);
+    public void doFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain)
+            throws IOException, ServletException {
+        boolean authorized = new Page(req, resp).isAuthorized();
+        String uri = req.getRequestURI();
 
         if (uri.equals("/")) {
-            httpResponse.sendRedirect("/welcome");
+            resp.sendRedirect(authorized ? "/dashboard" : "/welcome");
             return;
         }
 
-        if (
-            session == null && !uri.equals("/welcome") && !uri.startsWith("/static/") &&
-            !uri.startsWith("/css/") && !uri.startsWith("/js/") && !uri.startsWith("/img/") &&
-            !uri.equals("/favicon.ico") && !uri.equals("/login") && !uri.equals("/register")
-        ) {
-            httpResponse.sendRedirect("/login");
+        if (!authorized && !uri.equals("/welcome") && !uri.startsWith("/static/") &&
+            !uri.equals("/favicon.ico") && !uri.equals("/login") && !uri.equals("/register")) {
+            resp.sendRedirect("/login");
             return;
         }
 
-        chain.doFilter(request, response);
+        req.setCharacterEncoding("UTF-8");
+        chain.doFilter(req, resp);
     }
 }
