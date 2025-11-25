@@ -79,7 +79,7 @@ public class ScheduleDao extends Dao {
         String query = """
                 select
                     event_id, user_id, weekday, name, time_start, time_end, place, notes
-                from schedule where user_id = ?;
+                from schedule where user_id = ? order by weekday, time_start;
                 """;
 
         try (PreparedStatement preparedStatement = getPreparedStatement(query)) {

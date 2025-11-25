@@ -52,10 +52,48 @@
                 </div>
             </form>
         </details>
-    <h2>Понедельник</h2>
-    <h2>Вторник</h2>
-    <h2>Среда</h2>
-    <h2>Четверг</h2>
-    <h2>Пятница</h2>
-    <h2>Суббота</h2>
-    <h2>Воскресенье</h2>
+        <p>Неделя <span id="week-display"></span></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Время</th>
+                    <th>Название</th>
+                    <th>Место</th>
+                    <th>Примечание</th>
+                    <th>Действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:set var="weekday" value="0" scope="page"/>
+                <c:forEach var="event" items="${schedule}">
+                <c:if test="${weekday != event.weekday}">
+                <c:set var="weekday" value="${event.weekday}" scope="page"/>
+                <tr>
+                    <td class="weekday" colspan="5">
+                    <c:choose>
+                    <c:when test="${weekday == 1}">Понедельник</c:when>
+                    <c:when test="${weekday == 2}">Вторник</c:when>
+                    <c:when test="${weekday == 3}">Среда</c:when>
+                    <c:when test="${weekday == 4}">Четверг</c:when>
+                    <c:when test="${weekday == 5}">Пятница</c:when>
+                    <c:when test="${weekday == 6}">Суббота</c:when>
+                    <c:when test="${weekday == 7}">Воскресенье</c:when>
+                    </c:choose>
+                    </td>
+                </tr>
+                </c:if>
+                <div class="event">
+                    <tr id="event-${event.eventId}">
+                        <td class="time">${event.timeStart.toString().substring(0, 5)}–${event.timeEnd.toString().substring(0, 5)}</td>
+                        <td class="name">${event.name}</td>
+                        <td class="place">${event.place}</td>
+                        <td class="notes">${event.notes}</td>
+                        <td class="actions">
+                            <button class="edit" onclick="editEvent(${event.eventId})" title="Изменить">🖍️</button>
+                            <button onclick="deleteEvent(${event.eventId})" title="Удалить">🗑️</button>
+                        </td>
+                    </tr>
+                </div>
+                </c:forEach>
+            </tbody>
+        </table>

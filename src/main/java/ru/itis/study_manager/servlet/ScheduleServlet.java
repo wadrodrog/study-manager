@@ -29,10 +29,10 @@ public class ScheduleServlet extends HttpServlet {
         UserDto user = new Page(req).getCurrentUser();
 
         List<ScheduleEntity> schedule = service.getAll(user);
-        req.setAttribute("tasks", schedule);
+        req.setAttribute("schedule", schedule);
 
         new Page(req, resp).show(
-                "Расписание", "schedule", List.of("form", "tasks")
+                "Расписание", "schedule", List.of("form", "tasks", "schedule"), List.of("schedule")
         );
     }
 

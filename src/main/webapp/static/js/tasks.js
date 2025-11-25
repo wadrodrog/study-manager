@@ -136,4 +136,3 @@ function deleteTask(id) {
             return response;
         }).then(_ => location.reload());
 }
-
