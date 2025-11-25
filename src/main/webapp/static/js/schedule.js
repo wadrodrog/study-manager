@@ -1,13 +1,3 @@
-const start = new Date("2025-09-01");
-const current = new Date();
-const difference = current - start;
-const daysPassed = Math.floor(difference / (1000 * 60 * 60 * 24));
-const week = Math.floor((daysPassed + start.getDay()) / 7 + 1);
-
-window.addEventListener("load", function () {
-    document.getElementById("week-display").innerText = week;
-});
-
 function editEvent(id) {
     const timeContents = document.querySelector("#event-" + id + " .time .contents");
     const timeEdit = document.querySelector("#event-" + id + " .time .edit");

@@ -73,17 +73,20 @@ public class ScheduleDao extends Dao {
         }
     }
 
-    public List<ScheduleEntity> getAll(long userId) {
+    public List<ScheduleEntity> getAll(long userId, short weekday) {
         List<ScheduleEntity> schedule = new ArrayList<>();
 
         String query = """
                 select
                     event_id, user_id, weekday, name, time_start, time_end, place, notes
-                from schedule where user_id = ? order by weekday, time_start, time_end, name;
-                """;
+                from schedule where user_id = ?%s order by weekday, time_start, time_end, name;
+                """.formatted(weekday == 0 ? "" : " and weekday = ?");
 
         try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
             preparedStatement.setLong(1, userId);
+            if (weekday != 0) {
+                preparedStatement.setShort(2, weekday);
+            }
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {

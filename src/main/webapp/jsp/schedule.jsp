@@ -52,7 +52,7 @@
                 </div>
             </form>
         </details>
-        <p>Неделя <span id="week-display"></span></p>
+        <p>Сегодня <span id="datetime-display"></span></p>
         <table>
             <thead>
                 <tr>

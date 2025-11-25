@@ -23,10 +23,14 @@ public class ScheduleService {
     }
 
     public List<ScheduleEntity> getAll(UserDto user) {
+        return getAll(user, (short) 0);
+    }
+
+    public List<ScheduleEntity> getAll(UserDto user, short weekday) {
         if (user == null) {
             return new ArrayList<>();
         }
-        return dao.getAll(user.getUserId());
+        return dao.getAll(user.getUserId(), weekday);
     }
 
     public void create(Schedule schedule) {

@@ -32,7 +32,7 @@ public class ScheduleServlet extends HttpServlet {
         req.setAttribute("schedule", schedule);
 
         new Page(req, resp).show(
-                "Расписание", "schedule", List.of("form", "tasks", "schedule"), List.of("schedule")
+                "Расписание", "schedule", List.of("form", "tasks", "schedule"), List.of("schedule", "time")
         );
     }
 
