@@ -88,57 +88,58 @@ public class ScheduleServlet extends HttpServlet {
 
         service.delete(new Schedule(eventId, user.getUserId()));
     }
-//
-//    // For some unknown reason, to implement PATCH method you need to write this thing.
-//    // Just overriding doPatch doesn't work.
-//    @Override
-//    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        if (req.getMethod().equals("PATCH")) {
-//            this.doPatch(req, resp);
-//            return;
-//        }
-//        super.service(req, resp);
-//    }
-//
-//    protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-//        UserDto user = new Page(req).getCurrentUser();
-//        if (user == null) {
-//            resp.sendError(403);
-//            return;
-//        }
-//
-//        long taskId;
-//        try {
-//            taskId = Long.parseLong(req.getParameter("task_id"));
-//        } catch (NumberFormatException e) {
-//            resp.sendError(400, "Invalid task_id");
-//            return;
-//        }
-//
-//        String title = req.getParameter("title");
-//        String contents = req.getParameter("contents");
-//        String status = req.getParameter("status");
-//        String priority = req.getParameter("priority");
-//        String due = req.getParameter("due");
-//
-//        TaskEntity currentTask = service.get(user, taskId);
-//        Task updatedTask = new Task(
-//                currentTask.getTaskId(),
-//                currentTask.getUserId(),
-//                currentTask.getCreatedAt(),
-//                title != null ? title : currentTask.getTitle(),
-//                contents != null ? contents : currentTask.getContents(),
-//                status != null ? status : currentTask.getStatus().name(),
-//                priority != null ? priority : currentTask.getPriority() + "",
-//                due != null ? due : (currentTask.getDue() == null ? null : currentTask.getDue().toString())
-//        );
-//
-//        try {
-//            service.update(updatedTask);
-//            resp.setStatus(200);
-//        } catch (Exception e) {
-//            System.err.println("Error while updating task: " + e.getMessage());
-//            resp.setStatus(400);
-//        }
-//    }
+
+    // For some unknown reason, to implement PATCH method you need to write this thing.
+    // Just overriding doPatch doesn't work.
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (req.getMethod().equals("PATCH")) {
+            this.doPatch(req, resp);
+            return;
+        }
+        super.service(req, resp);
+    }
+
+    protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        UserDto user = new Page(req).getCurrentUser();
+        if (user == null) {
+            resp.sendError(403);
+            return;
+        }
+
+        long eventId;
+        try {
+            eventId = Long.parseLong(req.getParameter("event_id"));
+        } catch (NumberFormatException e) {
+            resp.sendError(400, "Invalid event_id");
+            return;
+        }
+
+        String weekday = req.getParameter("weekday");
+        String name = req.getParameter("name");
+        String place = req.getParameter("place");
+        String notes = req.getParameter("notes");
+        String timeStart = req.getParameter("time_start");
+        String timeEnd = req.getParameter("time_end");
+
+        ScheduleEntity currentSchedule = service.get(user, eventId);
+        Schedule updatedSchedule = new Schedule(
+                currentSchedule.getEventId(),
+                currentSchedule.getUserId(),
+                (weekday != null ? weekday : currentSchedule.getWeekday()) + "",
+                name != null ? name : currentSchedule.getName(),
+                timeStart != null ? (timeStart.isEmpty() ? null : timeStart + ":00") : currentSchedule.getTimeStart().toString(),
+                timeEnd != null ? (timeEnd.isEmpty() ? null : timeEnd + ":00") : currentSchedule.getTimeEnd().toString(),
+                place != null ? place : currentSchedule.getPlace(),
+                notes != null ? notes : currentSchedule.getNotes()
+        );
+
+        try {
+            service.update(updatedSchedule);
+            resp.setStatus(200);
+        } catch (Exception e) {
+            System.err.println("Error while updating schedule: " + e.getMessage());
+            resp.setStatus(400);
+        }
+    }
 }

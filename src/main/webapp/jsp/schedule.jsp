@@ -84,12 +84,36 @@
                 </c:if>
                 <div class="event">
                     <tr id="event-${event.eventId}">
-                        <td class="time">${event.timeStart.toString().substring(0, 5)}–${event.timeEnd.toString().substring(0, 5)}</td>
-                        <td class="name">${event.name}</td>
-                        <td class="place">${event.place}</td>
-                        <td class="notes">${event.notes}</td>
+                        <td class="time">
+                            <span class="contents">${event.timeStart.toString().substring(0, 5)}–${event.timeEnd.toString().substring(0, 5)}</span>
+                            <span class="edit" style="display: none;">
+                                <input class="start" type="time" />–<input class="end" type="time" />
+                            </span>
+                        </td>
+                        <td class="name">
+                            <span class="contents">${event.name}</span>
+                            <input class="edit" style="display: none;" type="text" placeholder="Название" pattern="(.|\s)*\S(.|\s)*" minlength="1" maxlength="256" />
+                        </td>
+                        <td class="place">
+                            <span class="contents">${event.place}</span>
+                            <input class="edit" style="display: none;" type="text" placeholder="Место" pattern="(.|\s)*\S(.|\s)*" maxlength="256" />
+                        </td>
+                        <td class="notes">
+                            <span class="contents">${event.notes}</span>
+                            <input class="edit" style="display: none;" type="text" placeholder="Примечание" pattern="(.|\s)*\S(.|\s)*" maxlength="256" />
+                        </td>
                         <td class="actions">
+                            <select name="weekday" class="weekday" style="display: none;">
+                                <option value="1" <c:if test="${event.weekday == 1}">selected</c:if>>Понедельник</option>
+                                <option value="2" <c:if test="${event.weekday == 2}">selected</c:if>>Вторник</option>
+                                <option value="3" <c:if test="${event.weekday == 3}">selected</c:if>>Среда</option>
+                                <option value="4" <c:if test="${event.weekday == 4}">selected</c:if>>Четверг</option>
+                                <option value="5" <c:if test="${event.weekday == 5}">selected</c:if>>Пятница</option>
+                                <option value="6" <c:if test="${event.weekday == 6}">selected</c:if>>Суббота</option>
+                                <option value="7" <c:if test="${event.weekday == 7}">selected</c:if>>Воскресенье</option>
+                            </select>
                             <button class="edit" onclick="editEvent(${event.eventId})" title="Изменить">🖍️</button>
+                            <button class="save" onclick="saveEvent(${event.eventId})" title="Сохранить" style="display: none;">✅</button>
                             <button onclick="deleteEvent(${event.eventId})" title="Удалить">🗑️</button>
                         </td>
                     </tr>

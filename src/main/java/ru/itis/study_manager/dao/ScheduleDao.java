@@ -79,7 +79,7 @@ public class ScheduleDao extends Dao {
         String query = """
                 select
                     event_id, user_id, weekday, name, time_start, time_end, place, notes
-                from schedule where user_id = ? order by weekday, time_start;
+                from schedule where user_id = ? order by weekday, time_start, time_end, name;
                 """;
 
         try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
@@ -107,7 +107,7 @@ public class ScheduleDao extends Dao {
     public void update(ScheduleEntity entity) {
         String query = """
                 update schedule
-                set weekday = ?, title = ?, time_start = ?, time_end = ?, place = ?, notes = ?
+                set weekday = ?, name = ?, time_start = ?, time_end = ?, place = ?, notes = ?
                 where event_id = ? and user_id = ?;
                 """;
         try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
