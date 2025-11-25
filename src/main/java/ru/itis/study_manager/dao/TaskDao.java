@@ -20,7 +20,6 @@ public class TaskDao extends Dao {
                 "created_at timestamp not null default current_timestamp",
                 "title varchar(256) not null",
                 "contents varchar(10000) not null default ''",
-                "attachments varchar[] not null default '{}'",
                 "status task_status not null default 'incomplete'",
                 "priority smallint not null default 0",
                 "due date"
@@ -64,7 +63,6 @@ public class TaskDao extends Dao {
                         resultSet.getDate("created_at"),
                         resultSet.getString("title"),
                         resultSet.getString("contents"),
-                        null,
                         TaskStatus.valueOf(resultSet.getString("status").toUpperCase()),
                         resultSet.getShort("priority"),
                         resultSet.getDate("due")
@@ -98,7 +96,6 @@ public class TaskDao extends Dao {
                         resultSet.getDate("created_at"),
                         resultSet.getString("title"),
                         resultSet.getString("contents"),
-                        null,
                         TaskStatus.valueOf(resultSet.getString("status").toUpperCase()),
                         resultSet.getShort("priority"),
                         resultSet.getDate("due")

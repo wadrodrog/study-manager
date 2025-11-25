@@ -15,7 +15,6 @@ public class TaskEntity {
     private Date createdAt;
     private String title;
     private String contents;
-    private String[] attachments;
     private TaskStatus status;
     private short priority;
     private Date due;

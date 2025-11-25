@@ -15,7 +15,6 @@ public class Task {
     private Date createdAt;
     private String title;
     private String contents;
-    private String[] attachments;
     private String status;
     private String priority;
     private String due;

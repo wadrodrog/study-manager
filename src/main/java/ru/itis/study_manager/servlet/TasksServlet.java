@@ -64,7 +64,7 @@ public class TasksServlet extends HttpServlet {
         try {
             service.create(new Task(
                     null, user.getUserId(), null,
-                    title, contents, null, status,
+                    title, contents, status,
                     priority, due
             ));
             resp.sendRedirect("/tasks");
@@ -131,7 +131,6 @@ public class TasksServlet extends HttpServlet {
                 currentTask.getCreatedAt(),
                 title != null ? title : currentTask.getTitle(),
                 contents != null ? contents : currentTask.getContents(),
-                currentTask.getAttachments(),
                 status != null ? status : currentTask.getStatus().name(),
                 priority != null ? priority : currentTask.getPriority() + "",
                 due != null ? due : (currentTask.getDue() == null ? null : currentTask.getDue().toString())

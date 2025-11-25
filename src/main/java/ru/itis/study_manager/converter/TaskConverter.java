@@ -16,7 +16,6 @@ public class TaskConverter implements Converter<Task, TaskEntity> {
                 .createdAt(task.getCreatedAt())
                 .title(StringUtil.isEmpty(task.getTitle()) ? null : StringUtil.truncate(task.getTitle(), 256))
                 .contents(StringUtil.isEmpty(task.getContents()) ? "" : StringUtil.truncate(task.getContents(), 10000))
-                .attachments(task.getAttachments())
                 .status(task.getStatus() == null ? TaskStatus.INCOMPLETE : TaskStatus.valueOf(task.getStatus().toUpperCase()))
                 .priority(task.getPriority() == null ? (short) 0 : Short.parseShort(task.getPriority()))
                 .due(task.getDue() == null || task.getDue().isEmpty() ? null : Date.valueOf(task.getDue()))
