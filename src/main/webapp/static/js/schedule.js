@@ -19,7 +19,7 @@ function deleteEvent(id) {
         return;
     }
 
-    fetch("/schedule?task_id=" + id, {method: "DELETE"})
+    fetch("/schedule?event_id=" + id, {method: "DELETE"})
         .then(response => {
             if (!response.ok) {
                 throw new Error("Delete event error: " + response.statusText);

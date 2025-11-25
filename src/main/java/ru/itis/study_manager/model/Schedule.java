@@ -16,4 +16,9 @@ public class Schedule {
     private String timeEnd;
     private String place;
     private String notes;
+
+    public Schedule(long eventId, long userId) {
+        this.eventId = eventId;
+        this.userId = userId;
+    }
 }

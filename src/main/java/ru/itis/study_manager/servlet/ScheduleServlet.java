@@ -70,24 +70,24 @@ public class ScheduleServlet extends HttpServlet {
         }
     }
 
-//    @Override
-//    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-//        UserDto user = new Page(req).getCurrentUser();
-//        if (user == null) {
-//            resp.sendError(403);
-//            return;
-//        }
-//
-//        long taskId;
-//        try {
-//            taskId = Long.parseLong(req.getParameter("task_id"));
-//        } catch (NumberFormatException e) {
-//            resp.sendError(400, "Invalid task_id");
-//            return;
-//        }
-//
-//        service.delete(new Task(taskId, user.getUserId()));
-//    }
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        UserDto user = new Page(req).getCurrentUser();
+        if (user == null) {
+            resp.sendError(403);
+            return;
+        }
+
+        long eventId;
+        try {
+            eventId = Long.parseLong(req.getParameter("event_id"));
+        } catch (NumberFormatException e) {
+            resp.sendError(400, "Invalid event_id");
+            return;
+        }
+
+        service.delete(new Schedule(eventId, user.getUserId()));
+    }
 //
 //    // For some unknown reason, to implement PATCH method you need to write this thing.
 //    // Just overriding doPatch doesn't work.
