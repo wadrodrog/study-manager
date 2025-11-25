@@ -11,7 +11,6 @@ public class UserModelToEntityConverter implements Converter<User, UserEntity> {
                 .userId(model.getUserId())
                 .username(model.getUsername())
                 .passwordHash(model.getPassword() == null ? null : HashUtil.hashPassword(model.getPassword()))
-                .theme((short) Math.clamp(model.getTheme(), 0, 2))
                 .build();
     }
 }

@@ -12,7 +12,6 @@ public class UserEntityToDtoConverter implements Converter<UserEntity, UserDto> 
         return UserDto.builder()
                 .userId(entity.getUserId())
                 .username(entity.getUsername())
-                .theme(entity.getTheme())
                 .build();
     }
 }

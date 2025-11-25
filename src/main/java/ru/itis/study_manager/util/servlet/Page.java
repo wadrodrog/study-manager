@@ -1,6 +1,7 @@
 package ru.itis.study_manager.util.servlet;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -48,7 +49,12 @@ public class Page {
         UserDto user = getCurrentUser();
         request.setAttribute("authorized", user != null);
         if (user != null) {
-            request.setAttribute("theme", user.getTheme());
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals("theme")) {
+                    request.setAttribute("theme", Short.parseShort(cookie.getValue()));
+                    break;
+                }
+            }
         }
 
         request.getRequestDispatcher(JSP_BASE).forward(request, response);

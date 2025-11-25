@@ -13,8 +13,7 @@ public class UserDao extends Dao {
                 "usr",
                 "user_id bigserial primary key",
                 "username varchar(32) not null unique",
-                "password_hash varchar(60) not null",
-                "theme smallint not null default 0"
+                "password_hash varchar(60) not null"
         );
     }
 
@@ -50,7 +49,6 @@ public class UserDao extends Dao {
                 return null;
             }
             entity.setUserId(resultSet.getLong("user_id"));
-            entity.setTheme(resultSet.getShort("theme"));
             return entity;
         } catch (SQLException e) {
             throw new DatabaseException("Error while executing query: " + e.getMessage());
@@ -75,16 +73,15 @@ public class UserDao extends Dao {
     public UserEntity update(UserEntity entity) {
         String query = """
                 update usr
-                set username = ?, theme = ?%s
+                set username = ?%s
                 where user_id = ?;
                 """.formatted(entity.getPasswordHash() == null ? "" : ", password_hash = ?");
         try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
             preparedStatement.setString(1, entity.getUsername());
-            preparedStatement.setShort(2, entity.getTheme());
             if (entity.getPasswordHash() != null) {
-                preparedStatement.setString(3, entity.getPasswordHash());
+                preparedStatement.setString(2, entity.getPasswordHash());
             }
-            preparedStatement.setLong(3 + (entity.getPasswordHash() != null ? 1 : 0), entity.getUserId());
+            preparedStatement.setLong(2 + (entity.getPasswordHash() != null ? 1 : 0), entity.getUserId());
             preparedStatement.execute();
             return entity;
         } catch (SQLException e) {

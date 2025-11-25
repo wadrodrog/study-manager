@@ -5,7 +5,7 @@ window.addEventListener("load", function () {
 });
 
 function updateTheme() {
-    fetch(`/settings?theme=${themeSwitcher.selectedIndex}`, {method: "POST"})
+    fetch(`/settings?theme=${themeSwitcher.selectedIndex}`, {method: "PATCH"})
         .then(response => {
             if (!response.ok) {
                 throw new Error("Update user theme error: " + response.statusText);

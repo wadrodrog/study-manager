@@ -11,5 +11,4 @@ public class UserEntity {
     private Long userId;
     private String username;
     private String passwordHash;
-    private short theme;
 }

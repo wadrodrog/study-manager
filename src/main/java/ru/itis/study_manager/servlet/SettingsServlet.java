@@ -2,6 +2,7 @@ package ru.itis.study_manager.servlet;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,9 +43,8 @@ public class SettingsServlet extends HttpServlet {
         String currentPassword = req.getParameter("current_password");
         String newPassword = req.getParameter("new_password");
         String newUsername = req.getParameter("new_username");
-        String theme = req.getParameter("theme");
 
-        if (theme == null && newPassword != null || newUsername != null) {
+        if (newPassword != null || newUsername != null) {
             User userCheck = new User(user.getUsername(), currentPassword);
             if (service.authenticateUser(userCheck) == null) {
                 resp.sendRedirect("/settings?error=Wrong password");
@@ -55,8 +55,7 @@ public class SettingsServlet extends HttpServlet {
         User updatedUser = new User(
                 user.getUserId(),
                 newUsername != null ? newUsername : user.getUsername(),
-                newPassword,
-                theme != null ? Short.parseShort(theme) : user.getTheme()
+                newPassword
         );
 
         try {
@@ -64,8 +63,31 @@ public class SettingsServlet extends HttpServlet {
             new Page(req, resp).setCurrentUser(userDto);
             resp.sendRedirect("/settings?success");
         } catch (Exception e) {
-            System.err.println("Error while updating user: " + e.getMessage());
             resp.sendRedirect("/settings?error");
         }
+    }
+
+    // For some unknown reason, to implement PATCH method you need to write this thing.
+    // Just overriding doPatch doesn't work.
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (req.getMethod().equals("PATCH")) {
+            this.doPatch(req, resp);
+            return;
+        }
+        super.service(req, resp);
+    }
+
+    protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        short theme;
+        try {
+            theme = Short.parseShort(req.getParameter("theme"));
+        } catch (NumberFormatException e) {
+            resp.sendRedirect("/settings?error");
+            return;
+        }
+
+        Cookie cookie = new Cookie("theme", theme + "");
+        resp.addCookie(cookie);
     }
 }
