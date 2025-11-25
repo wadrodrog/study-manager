@@ -40,7 +40,7 @@ public class UserDao extends Dao {
     }
 
     public UserEntity getUser(UserEntity entity) throws DatabaseException {
-        String query = "select user_id, theme from usr where username = ?;";
+        String query = "select user_id from usr where username = ?;";
         try (PreparedStatement preparedStatement = getPreparedStatement(query)) {
             preparedStatement.setString(1, entity.getUsername());
 

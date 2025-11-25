@@ -6,6 +6,7 @@
                 <c:choose>
                 <c:when test="${authorized}">
                 <li><a href="/dashboard">Обзор</a></li>
+                <li><a href="/schedule">Расписание</a></li>
                 <li><a href="/tasks">Задачи</a></li>
                 <li><a href="/settings">Настройки</a></li>
                 <li><a href="/logout">Выйти</a></li>
