@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.itis.study_manager.dto.UserDto;
 import ru.itis.study_manager.entity.ScheduleEntity;
+import ru.itis.study_manager.exception.DatabaseException;
+import ru.itis.study_manager.model.Schedule;
 import ru.itis.study_manager.service.ScheduleService;
 import ru.itis.study_manager.util.servlet.Page;
 
@@ -30,32 +32,44 @@ public class ScheduleServlet extends HttpServlet {
         req.setAttribute("tasks", schedule);
 
         new Page(req, resp).show(
-                "Расписание", "schedule"
+                "Расписание", "schedule", List.of("form", "tasks")
         );
     }
 
-//    @Override
-//    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-//        UserDto user = new Page(req).getCurrentUser();
-//
-//        String title = req.getParameter("title");
-//        String contents = req.getParameter("contents");
-//        String priority = req.getParameter("priority");
-//        String due = req.getParameter("due");
-//        String status = req.getParameter("status");
-//
-//        try {
-//            service.create(new Task(
-//                    null, user.getUserId(), null,
-//                    title, contents, status,
-//                    priority, due
-//            ));
-//            resp.sendRedirect("/tasks");
-//        } catch (IllegalArgumentException | NullPointerException | DatabaseException e) {
-//            resp.sendError(400);
-//        }
-//    }
-//
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        UserDto user = new Page(req).getCurrentUser();
+
+        String weekday = req.getParameter("weekday");
+        String name = req.getParameter("name");
+        String place = req.getParameter("place");
+        String notes = req.getParameter("notes");
+        String timeStart = req.getParameter("time_start") + ":00";
+        String timeEnd = req.getParameter("time_end") + ":00";
+
+        if (":00".equals(timeStart)) {
+            timeStart = null;
+        }
+        if (":00".equals(timeEnd)) {
+            timeEnd = null;
+        }
+
+        if (timeStart != null && timeEnd != null && timeEnd.compareTo(timeStart) < 0) {
+            resp.sendRedirect("/schedule?error=Invalid time range");
+            return;
+        }
+
+        try {
+            service.create(new Schedule(
+                    null, user.getUserId(), weekday,
+                    name, timeStart, timeEnd, place, notes
+            ));
+            resp.sendRedirect("/schedule");
+        } catch (IllegalArgumentException | NullPointerException | DatabaseException e) {
+            resp.sendError(400);
+        }
+    }
+
 //    @Override
 //    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 //        UserDto user = new Page(req).getCurrentUser();
